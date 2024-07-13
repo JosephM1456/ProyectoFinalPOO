@@ -31,20 +31,20 @@ public class Principal extends JFrame {
                     break;
                 }
             }
-            UIManager.put("control", new Color(50, 50, 50)); // Dark grey for controls
-            UIManager.put("info", new Color(50, 50, 50)); // Dark grey for info panels
-            UIManager.put("nimbusBase", new Color(0, 0, 0)); // Black for base
-            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0)); // Bright yellow
-            UIManager.put("nimbusDisabledText", new Color(128, 128, 128)); // Grey for disabled text
-            UIManager.put("nimbusFocus", new Color(0, 255, 0)); // Bright green for focus
-            UIManager.put("nimbusGreen", new Color(0, 255, 0)); // Bright green
-            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221)); // Default blue
-            UIManager.put("nimbusLightBackground", new Color(50, 50, 50)); // Dark grey for light background
-            UIManager.put("nimbusOrange", new Color(255, 200, 0)); // Bright orange
-            UIManager.put("nimbusRed", new Color(169, 46, 34)); // Dark red
-            UIManager.put("nimbusSelectedText", new Color(255, 255, 255)); // White for selected text
-            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0)); // Bright green for selection background
-            UIManager.put("text", new Color(255, 255, 255)); // White text
+            UIManager.put("control", new Color(50, 50, 50)); 
+            UIManager.put("info", new Color(50, 50, 50)); 
+            UIManager.put("nimbusBase", new Color(0, 0, 0)); 
+            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0)); 
+            UIManager.put("nimbusDisabledText", new Color(128, 128, 128)); 
+            UIManager.put("nimbusFocus", new Color(0, 255, 0)); 
+            UIManager.put("nimbusGreen", new Color(0, 255, 0)); 
+            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221)); 
+            UIManager.put("nimbusLightBackground", new Color(50, 50, 50)); 
+            UIManager.put("nimbusOrange", new Color(255, 200, 0)); 
+            UIManager.put("nimbusRed", new Color(169, 46, 34)); 
+            UIManager.put("nimbusSelectedText", new Color(255, 255, 255)); 
+            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
+            UIManager.put("text", new Color(255, 255, 255)); 
         } catch (Exception e) {
             e.printStackTrace();
         }
