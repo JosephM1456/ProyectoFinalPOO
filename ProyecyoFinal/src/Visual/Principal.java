@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,10 +20,23 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import Logico.Componente;
+import Logico.DiscoDuro;
+import Logico.Empresa;
+
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.GridBagConstraints;
+import javax.swing.JScrollPane;
+import net.miginfocom.swing.MigLayout;
+
 public class Principal extends JFrame {
 
     private JPanel contentPane;
     private Dimension dim;
+    private JPanel panel_1;
+    private GridBagConstraints constr = new GridBagConstraints();
+    private MigLayout lt;
 
     public static void main(String[] args) {
         try {
@@ -62,6 +77,33 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
+    	
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+            UIManager.put("control", new Color(50, 50, 50)); 
+            UIManager.put("info", new Color(50, 50, 50)); 
+            UIManager.put("nimbusBase", new Color(0, 0, 0)); 
+            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0)); 
+            UIManager.put("nimbusDisabledText", new Color(128, 128, 128)); 
+            UIManager.put("nimbusFocus", new Color(0, 255, 0)); 
+            UIManager.put("nimbusGreen", new Color(0, 255, 0)); 
+            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221)); 
+            UIManager.put("nimbusLightBackground", new Color(50, 50, 50)); 
+            UIManager.put("nimbusOrange", new Color(255, 200, 0)); 
+            UIManager.put("nimbusRed", new Color(169, 46, 34)); 
+            UIManager.put("nimbusSelectedText", new Color(255, 255, 255)); 
+            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
+            UIManager.put("text", new Color(255, 255, 255)); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    	
+    	
         setTitle("Sistema de Facturas y Publicaciones");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -160,12 +202,16 @@ public class Principal extends JFrame {
         FlowLayout flowLayout = (FlowLayout) panel.getLayout();
         flowLayout.setVgap(10);
         contentPane.add(panel, BorderLayout.SOUTH);
+        
 
-        JPanel panel_1 = new JPanel();
+
+        panel_1 = new JPanel();
         panel_1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
-        flowLayout_1.setVgap(4);
-        flowLayout_1.setHgap(4);
         contentPane.add(panel_1, BorderLayout.CENTER);
+        panel_1.setLayout(new BorderLayout(0, 0));
+
+
     }
+    
+
 }

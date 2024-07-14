@@ -9,6 +9,17 @@ public abstract class Componente {
 	protected String Marca;
 	protected String Modelo;
 	
+	
+	public Componente(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+			String modelo) {
+		super();
+		IdComponente = idComponente;
+		NumeroSerie = numeroSerie;
+		Precio = precio;
+		CantidadDisponible = cantidadDisponible;
+		Marca = marca;
+		Modelo = modelo;
+	}
 	public String getIdComponente() {
 		return IdComponente;
 	}

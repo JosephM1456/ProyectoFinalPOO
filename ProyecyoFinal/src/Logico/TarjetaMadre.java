@@ -7,12 +7,19 @@ public class TarjetaMadre extends Componente {
 	private String Conector;
 	private String TipoRam;
 	private ArrayList<String>Conexiones;
-	public TarjetaMadre(String conector, String tipoRam, ArrayList<String> conexiones) {
-		super();
-		Conector = conector;
-		TipoRam = tipoRam;
-		Conexiones = conexiones;
+
+	
+	
+	public TarjetaMadre(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+			String modelo, String conector, String tipoRam, ArrayList<String>conexiones) {
+		super(idComponente, numeroSerie, precio, cantidadDisponible, marca, modelo);
+		// TODO Auto-generated constructor stub
+		this.Conector = conector;
+		this.TipoRam = tipoRam;
+		this.Conexiones = conexiones;
 	}
+	
+	
 	public String getConector() {
 		return Conector;
 	}

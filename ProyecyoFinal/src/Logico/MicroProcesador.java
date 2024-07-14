@@ -3,6 +3,16 @@ package Logico;
 public class MicroProcesador extends Componente {
 	private String TipoConex;
 	private float VelProcesamientoGHz;
+	
+	public MicroProcesador(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+		String modelo, String tipoConex, float velProcesamientoGHz) 
+	{
+		super(idComponente, numeroSerie, precio, cantidadDisponible, marca, modelo);
+		// TODO Auto-generated constructor stub
+		this.TipoConex = tipoConex;
+		this.VelProcesamientoGHz = velProcesamientoGHz;
+	}
+	
 	public String getTipoConex() {
 		return TipoConex;
 	}
@@ -15,10 +25,7 @@ public class MicroProcesador extends Componente {
 	public void setVelProcesamientoGHz(float velProcesamientoGHz) {
 		VelProcesamientoGHz = velProcesamientoGHz;
 	}
-	public MicroProcesador(String tipoConex, float velProcesamientoGHz) {
-		super();
-		TipoConex = tipoConex;
-		VelProcesamientoGHz = velProcesamientoGHz;
-	}
+
+	
 	
 }

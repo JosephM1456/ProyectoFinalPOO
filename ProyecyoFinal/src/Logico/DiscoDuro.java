@@ -1,9 +1,17 @@
 package Logico;
 
 public class DiscoDuro extends Componente {
+
 	private String TipoConex;
 	private float CapAlmacenamiento;
 	
+	protected DiscoDuro(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+			String modelo, String tipoConex, float capAlmacenamiento) {
+		super(idComponente, numeroSerie, precio, cantidadDisponible, marca, modelo);
+		// TODO Auto-generated constructor stub
+		this.TipoConex = tipoConex;
+		this.CapAlmacenamiento = capAlmacenamiento;
+	}
 	
 	public String getTipoConex() {
 		return TipoConex;
@@ -17,9 +25,5 @@ public class DiscoDuro extends Componente {
 	public void setCapAlmacenamiento(float capAlmacenamiento) {
 		CapAlmacenamiento = capAlmacenamiento;
 	}
-	public DiscoDuro(String tipoConex, float capAlmacenamiento) {
-		super();
-		TipoConex = tipoConex;
-		CapAlmacenamiento = capAlmacenamiento;
-	}
+
 }

@@ -3,6 +3,16 @@ package Logico;
 public class RAM extends Componente {
 	private float CantGB;
 	private String TipoMemoria;
+	
+	
+	
+	public RAM(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+			String modelo, float cantGB, String tipoMemoria) {
+		super(idComponente, numeroSerie, precio, cantidadDisponible, marca, modelo);
+		// TODO Auto-generated constructor stub
+		this.CantGB = cantGB;
+		this.TipoMemoria = tipoMemoria;
+	}
 	public float getCantGB() {
 		return CantGB;
 	}
@@ -15,10 +25,6 @@ public class RAM extends Componente {
 	public void setTipoMemoria(String tipoMemoria) {
 		TipoMemoria = tipoMemoria;
 	}
-	public RAM(float cantGB, String tipoMemoria) {
-		super();
-		CantGB = cantGB;
-		TipoMemoria = tipoMemoria;
-	}
+
 	
 }
