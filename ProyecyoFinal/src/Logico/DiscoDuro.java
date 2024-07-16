@@ -5,7 +5,7 @@ public class DiscoDuro extends Componente {
 	private String TipoConex;
 	private float CapAlmacenamiento;
 	
-	protected DiscoDuro(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
+	public DiscoDuro(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
 			String modelo, String tipoConex, float capAlmacenamiento) {
 		super(idComponente, numeroSerie, precio, cantidadDisponible, marca, modelo);
 		// TODO Auto-generated constructor stub

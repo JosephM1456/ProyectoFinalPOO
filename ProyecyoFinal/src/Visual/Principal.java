@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,6 +30,15 @@ import java.awt.Insets;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
+import java.awt.GridLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JScrollBar;
+import javax.swing.JLayeredPane;
+import java.awt.Component;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextArea;
 
 public class Principal extends JFrame {
 
@@ -36,7 +46,11 @@ public class Principal extends JFrame {
     private Dimension dim;
     private JPanel panel_1;
     private GridBagConstraints constr = new GridBagConstraints();
-    private MigLayout lt;
+    private JPanel compPanel;
+    private ArrayList<Componente> listaComp = Empresa.getInstance().getLosComponentes();
+    private int rangoSup = 0;
+    private int rangoInf = 0;
+    private JScrollPane scrollPane;
 
     public static void main(String[] args) {
         try {
@@ -108,7 +122,7 @@ public class Principal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         dim = getToolkit().getScreenSize();
-        setSize(dim.width, dim.height - 35);
+        setSize(2415, 1427);
         setLocationRelativeTo(null);
 
         contentPane = new JPanel();
@@ -196,22 +210,117 @@ public class Principal extends JFrame {
             }
         });
         menuPanel.add(btnListadoCliente);
+        
+        constr.gridheight = 100;
+        constr.gridwidth = 75;
+        constr.fill = GridBagConstraints.NONE;
+        constr.ipadx = 10;
+        constr.ipady = 5;
+        constr.gridy = 0;
+        constr.weightx = 1.0;
+        constr.weighty = 1.0;
 
         JPanel panel = new JPanel();
         panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         FlowLayout flowLayout = (FlowLayout) panel.getLayout();
         flowLayout.setVgap(10);
         contentPane.add(panel, BorderLayout.SOUTH);
-        
-
-
         panel_1 = new JPanel();
-        panel_1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 255, 0)));
         contentPane.add(panel_1, BorderLayout.CENTER);
-        panel_1.setLayout(new BorderLayout(0, 0));
+        panel_1.setLayout(null);
+        
+        scrollPane = new JScrollPane();
+        scrollPane.setBounds(15, 16, 360, 876);
+        panel_1.add(scrollPane);
+        scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+        scrollPane.setBorder(new TitledBorder(null, "Componentes", TitledBorder.LEADING, TitledBorder.TOP, null, Color.GREEN));
+        
+        compPanel = new JPanel();
+        scrollPane.setViewportView(compPanel);
+        compPanel.setAutoscrolls(true);
+        FlowLayout fl_compPanel = new FlowLayout(FlowLayout.LEADING, 5, 0);
+        fl_compPanel.setAlignOnBaseline(true);
+        compPanel.setMinimumSize(new Dimension(360, 100));
+        compPanel.setPreferredSize(new Dimension(360, 1000));
+        compPanel.setMaximumSize(new Dimension(360, 5000));
+        compPanel.setLayout(fl_compPanel);
+        
+        JPanel panel_2 = new JPanel();
+        panel_2.setBounds(496, 95, 151, 274);
+        panel_1.add(panel_2);
+        GridBagLayout gbl_panel_2 = new GridBagLayout();
+        gbl_panel_2.columnWidths = new int[]{121, 0};
+        gbl_panel_2.rowHeights = new int[]{125, 108, 29, 0};
+        gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+        panel_2.setLayout(gbl_panel_2);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
+        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
+        gbc_lblNewLabel.gridx = 0;
+        gbc_lblNewLabel.gridy = 0;
+        panel_2.add(lblNewLabel, gbc_lblNewLabel);
+        
+        JTextArea textArea = new JTextArea();
+        GridBagConstraints gbc_textArea = new GridBagConstraints();
+        gbc_textArea.fill = GridBagConstraints.BOTH;
+        gbc_textArea.insets = new Insets(0, 0, 5, 0);
+        gbc_textArea.gridx = 0;
+        gbc_textArea.gridy = 1;
+        panel_2.add(textArea, gbc_textArea);
+        
+        JButton btnNewButton = new JButton("New button");
+        GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+        gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
+        gbc_btnNewButton.gridx = 0;
+        gbc_btnNewButton.gridy = 2;
+        panel_2.add(btnNewButton, gbc_btnNewButton);
+       
 
-
+        loadComp();
     }
     
+    protected void moverListaDerecha() {
+		// TODO Auto-generated method stub
+		if(rangoInf < listaComp.size()-1)
+		{
+			rangoSup += 1;
+		}	
+	}
+    
+    protected void moverListaIzquierda()
+    {
+    	if(rangoSup > 0)
+    	{
+    		rangoSup -= 1;
+    	}	
+    }
 
+	public void loadComp()
+    {
+		if(listaComp.isEmpty())
+			return;
+		//rangoInf = rangoSup + 6;
+		
+    	for(int ind = rangoSup; ind < listaComp.size(); ind++)
+    	{
+
+    		PanelComponente pan = new PanelComponente(listaComp.get(ind));
+    		if(ind == 6)
+    		{
+    			pan.getLbl().setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
+    		}
+    		compPanel.add(pan);
+    		compPanel.revalidate();
+    		compPanel.repaint();
+    		
+    	}
+	    //panel_1.revalidate();
+	   	//panel_1.repaint();
+
+    	
+    }
 }
