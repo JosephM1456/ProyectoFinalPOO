@@ -1,28 +1,22 @@
 package Visual;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.LayoutManager;
-
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import Logico.Componente;
 import Logico.DiscoDuro;
 
 public class PanelComponente extends JPanel {
 	private Componente comp;
-	private JButton btn;
 	private JLabel lbl;
-	private JFormattedTextField txt;
+	private JTextArea txt;
 	private GridBagLayout lt;
 	private GridBagConstraints constr;
 	private Dimension size = new Dimension(30, 60);
@@ -35,27 +29,23 @@ public class PanelComponente extends JPanel {
 		this.lt.rowHeights = new int[] {125, 108, 29, 0};
 		this.lt.columnWeights = new double[] {0.0};
 		this.lt.rowWeights = new double[] {0.0, 0.0, 0.0, Double.MIN_VALUE};
-		this.constr.gridheight = 1;
-		this.constr.gridwidth = 1;
+		this.constr.gridheight = 0;
+		this.constr.gridwidth = 0;
 		this.constr.gridx = 0;
 		this.constr.gridy = 0;
-		this.constr.insets = new Insets(1, 10, 0, 10);
-		this.constr.anchor = GridBagConstraints.CENTER;
-		this.setPreferredSize(new Dimension(150, 275));
-		this.setMinimumSize(new Dimension(150, 275));
-		this.setMaximumSize(new Dimension(150, 275));
+		this.constr.insets = new Insets(1, 0, 10, 0);
+		this.constr.anchor = GridBagConstraints.NORTH;
+		this.setPreferredSize(new Dimension(150, 233));
+		this.setMinimumSize(new Dimension(150, 233));
+		this.setMaximumSize(new Dimension(150, 233));
 		this.setLayout(lt);
 		this.comp = comp;
 		
-		this.btn = new JButton("Comprar");
-		Dimension btnSize = new Dimension(112, 29);
-		this.btn.setPreferredSize(btnSize);
 		this.lbl = new JLabel( new ImageIcon(new ImageIcon(PanelComponente.class.getResource("/img/discoduro.png")).getImage().getScaledInstance(110, 100, 0) ));
-		this.txt = new JFormattedTextField();
+		this.txt = new JTextArea();
+		this.setPreferredSize(new Dimension(110, 100));
 		//this.txt.setEditable(false);
 		
-		
-		this.txt = new JFormattedTextField();
 		this.txt.setPreferredSize(size);
 		this.txt.setColumns(10);
 		this.txt.setText("Marca: "+comp.getMarca()+"\nModelo: "+comp.getModelo()+"\nPrecio: "+comp.getPrecio() );
@@ -63,15 +53,10 @@ public class PanelComponente extends JPanel {
 		this.add(lbl, constr);
 		this.constr.gridy = 1;
 		//constr.weighty = 1.0;
-		//this.constr.anchor = GridBagConstraints.CENTER;
-		this.constr.insets = new Insets(40, 10, 10, 10);
+		this.constr.fill = GridBagConstraints.HORIZONTAL;
+		this.constr.insets = new Insets(0, 10, 10, 10);
 		this.add(txt, constr);
-		constr.weighty = 0.0;
-		this.constr.gridy = 2;
-		constr.ipady = 0;
-		this.constr.anchor = GridBagConstraints.NORTH;
-		this.constr.insets = new Insets(1, 10, 1, 10);
-		this.add(btn, constr);
+
 		
 		
 		
@@ -98,13 +83,7 @@ public class PanelComponente extends JPanel {
 		this.comp = comp;
 	}
 
-	public JButton getBtn() {
-		return btn;
-	}
 
-	public void setBtn(JButton btn) {
-		this.btn = btn;
-	}
 
 	public JLabel getLbl() {
 		return lbl;
@@ -114,11 +93,11 @@ public class PanelComponente extends JPanel {
 		this.lbl = lbl;
 	}
 
-	public JFormattedTextField getTxt() {
+	public JTextArea getTxt() {
 		return txt;
 	}
 
-	public void setTxt(JFormattedTextField txt) {
+	public void setTxt(JTextArea txt) {
 		this.txt = txt;
 	}
     

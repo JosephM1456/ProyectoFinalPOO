@@ -29,11 +29,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
-import java.awt.GridLayout;
-import javax.swing.JScrollBar;
-import javax.swing.JLayeredPane;
-import java.awt.Component;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
 
 public class Principal extends JFrame {
@@ -207,6 +202,9 @@ public class Principal extends JFrame {
         });
         menuPanel.add(btnListadoCliente);
         
+        JButton btnNewButton_1 = new JButton("New button");
+        menuPanel.add(btnNewButton_1);
+        
         constr.gridheight = 100;
         constr.gridwidth = 75;
         constr.fill = GridBagConstraints.NONE;
@@ -242,38 +240,31 @@ public class Principal extends JFrame {
         compPanel.setMaximumSize(new Dimension(360, 5000));
         compPanel.setLayout(fl_compPanel);
         
-//        JPanel panel_2 = new JPanel();
-//        panel_2.setBounds(496, 95, 151, 274);
-//        panel_1.add(panel_2);
-//        GridBagLayout gbl_panel_2 = new GridBagLayout();
-//        gbl_panel_2.columnWidths = new int[]{121, 0};
-//        gbl_panel_2.rowHeights = new int[]{125, 108, 29, 0};
-//        gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-//        gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-//        panel_2.setLayout(gbl_panel_2);
-//        
-//        JLabel lblNewLabel = new JLabel("");
-//        lblNewLabel.setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
-//        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-//        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-//        gbc_lblNewLabel.gridx = 0;
-//        gbc_lblNewLabel.gridy = 0;
-//        panel_2.add(lblNewLabel, gbc_lblNewLabel);
-//        
-//        JTextArea textArea = new JTextArea();
-//        GridBagConstraints gbc_textArea = new GridBagConstraints();
-//        gbc_textArea.fill = GridBagConstraints.BOTH;
-//        gbc_textArea.insets = new Insets(0, 0, 5, 0);
-//        gbc_textArea.gridx = 0;
-//        gbc_textArea.gridy = 1;
-//        panel_2.add(textArea, gbc_textArea);
-//        
-//        JButton btnNewButton = new JButton("New button");
-//        GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-//        gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
-//        gbc_btnNewButton.gridx = 0;
-//        gbc_btnNewButton.gridy = 2;
-//        panel_2.add(btnNewButton, gbc_btnNewButton);
+        JPanel panel_2 = new JPanel();
+        panel_2.setBounds(496, 95, 151, 233);
+        panel_1.add(panel_2);
+        GridBagLayout gbl_panel_2 = new GridBagLayout();
+        gbl_panel_2.columnWidths = new int[]{121, 0};
+        gbl_panel_2.rowHeights = new int[]{125, 108, 0};
+        gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gbl_panel_2.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+        panel_2.setLayout(gbl_panel_2);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
+        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
+        gbc_lblNewLabel.gridx = 0;
+        gbc_lblNewLabel.gridy = 0;
+        panel_2.add(lblNewLabel, gbc_lblNewLabel);
+        
+        JTextArea textArea = new JTextArea();
+        GridBagConstraints gbc_textArea = new GridBagConstraints();
+        gbc_textArea.fill = GridBagConstraints.BOTH;
+        gbc_textArea.insets = new Insets(0, 0, 5, 0);
+        gbc_textArea.gridx = 0;
+        gbc_textArea.gridy = 1;
+        panel_2.add(textArea, gbc_textArea);
 //       
 
         loadComp();
@@ -307,7 +298,7 @@ public class Principal extends JFrame {
     		PanelComponente pan = new PanelComponente(listaComp.get(ind));
     		if(ind == 6)
     		{
-    			//pan.getLbl().setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
+    			pan.getLbl().setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
     		}
     		compPanel.add(pan);
     		compPanel.revalidate();
