@@ -22,11 +22,12 @@ public class Empleado extends Cliente {
 	public void setDescuento(int descuento) {
 		Descuento = descuento;
 	}
-	public Empleado(float sueldoTotal, int cantAniosTrabajando, int descuento) {
-		super();
+	public Empleado(String idCliente, String direccion, String telefono, String cedula,float sueldoTotal, int cantAniosTrabajando, int descuento) {
+		super(idCliente, direccion, telefono,  cedula);
 		SueldoTotal = sueldoTotal;
 		CantAniosTrabajando = cantAniosTrabajando;
 		Descuento = descuento;
 	}
 	
 }
+

@@ -11,8 +11,9 @@ public class Visitante extends Cliente {
 		CantCompras = cantCompras;
 	}
 
-	public Visitante(int cantCompras) {
-		super();
+	public Visitante(String idCliente, String direccion, String telefono, String cedula, int cantCompras) {
+		super( idCliente,  direccion, telefono,  cedula);
 		CantCompras = cantCompras;
 	}
 }
+

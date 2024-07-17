@@ -30,4 +30,11 @@ public abstract class Cliente {
 	public void setCedula(String cedula) {
 		Cedula = cedula;
 	}
+	public Cliente(String idCliente, String direccion, String telefono, String cedula) {
+		super();
+		IdCliente = idCliente;
+		Direccion = direccion;
+		Telefono = telefono;
+		Cedula = cedula;
+	}
 }
