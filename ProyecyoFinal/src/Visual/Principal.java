@@ -143,6 +143,9 @@ public class Principal extends JFrame {
         btnComponentes.setBackground(Color.BLACK);
         btnComponentes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	RegComponente regcomponente = new RegComponente(null);
+            	regcomponente.setVisible(true);
+            	regcomponente.setModal(true);
             }
         });
         menuPanel.add(btnComponentes);
@@ -186,6 +189,9 @@ public class Principal extends JFrame {
         btnCliente.setBackground(Color.BLACK);
         btnCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	RegCliente regcliente = new RegCliente(null);
+            	regcliente.setModal(true);
+            	regcliente.setVisible(true);
 
             }
         });
