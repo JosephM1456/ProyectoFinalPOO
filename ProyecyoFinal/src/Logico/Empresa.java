@@ -18,6 +18,7 @@ public class Empresa {
 		return miEmpresa;
 	}
 	private Empresa() {
+		super();
 		this.LasFacturas = new ArrayList<>();
 		this.LosClientes = new ArrayList<>();
 		this.LosComponentes = new ArrayList<>();
@@ -144,5 +145,15 @@ public class Empresa {
 	                break;
 	            }
 	        }
+	    }
+	 
+	 public ArrayList<Componente> getComponentesSeleccionados() {
+	        ArrayList<Componente> componentesSeleccionados = new ArrayList<>();
+	        for (Componente componente : LosComponentes) {
+	            if (componente.isSeleccionado()) {
+	            	componentesSeleccionados.add(componente);
+	            }
+	        }
+	        return componentesSeleccionados;
 	    }
 }

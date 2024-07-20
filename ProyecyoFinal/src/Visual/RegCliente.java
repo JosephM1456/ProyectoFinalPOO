@@ -21,6 +21,7 @@ import Logico.Cliente;
 import Logico.Visitante;
 import Logico.Empleado;
 import Logico.Empresa;
+import javax.swing.border.TitledBorder;
 
 public class RegCliente extends JDialog {
 
@@ -39,6 +40,7 @@ public class RegCliente extends JDialog {
 
     private JRadioButton btnVisitante;
     private JRadioButton btnEmpleado;
+    private JTextField txtNombre;
 
     public static void main(String[] args) {
         try {
@@ -51,7 +53,8 @@ public class RegCliente extends JDialog {
     }
 
     public RegCliente(Cliente aux) {
-        setBounds(100, 100, 500, 478);
+        setBounds(100, 100, 500, 565);
+        setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setLayout(null);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,24 +98,20 @@ public class RegCliente extends JDialog {
         contentPanel.add(lblCedula);
 
         cedulaTextField = new JTextField();
-        cedulaTextField.setBounds(120, 140, 200, 25);
+        cedulaTextField.setBounds(120, 139, 200, 25);
         contentPanel.add(cedulaTextField);
         cedulaTextField.setColumns(10);
 
         JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setBounds(30, 180, 400, 50);
+        layeredPane.setBorder(new TitledBorder(null, "Tipo de Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        layeredPane.setBounds(30, 214, 400, 50);
         contentPanel.add(layeredPane);
-
-        JLabel lblTipoCliente = new JLabel("Tipo de Cliente:");
-        lblTipoCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblTipoCliente.setBounds(120, 0, 200, 25);
-        layeredPane.add(lblTipoCliente, new Integer(1));
 
         ButtonGroup group = new ButtonGroup();
 
         btnVisitante = new JRadioButton("Visitante");
         btnVisitante.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnVisitante.setBounds(30, 30, 100, 25);
+        btnVisitante.setBounds(77, 30, 100, 25);
         btnVisitante.setSelected(true);
         btnVisitante.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -125,7 +124,7 @@ public class RegCliente extends JDialog {
 
         btnEmpleado = new JRadioButton("Empleado");
         btnEmpleado.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnEmpleado.setBounds(150, 30, 100, 25);
+        btnEmpleado.setBounds(209, 30, 100, 25);
         btnEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 panelVisitante.setVisible(false);
@@ -136,7 +135,7 @@ public class RegCliente extends JDialog {
         layeredPane.add(btnEmpleado, new Integer(1));
 
         panelVisitante = new JPanel();
-        panelVisitante.setBounds(30, 240, 400, 160);
+        panelVisitante.setBounds(30, 270, 400, 160);
         contentPanel.add(panelVisitante);
         panelVisitante.setLayout(null);
 
@@ -150,7 +149,7 @@ public class RegCliente extends JDialog {
         cantComprasTextField.setColumns(10);
 
         panelEmpleado = new JPanel();
-        panelEmpleado.setBounds(30, 240, 400, 160);
+        panelEmpleado.setBounds(30, 270, 400, 160);
         contentPanel.add(panelEmpleado);
         panelEmpleado.setLayout(null);
 
@@ -180,6 +179,15 @@ public class RegCliente extends JDialog {
         descuentoTextField.setBounds(120, 70, 200, 25);
         panelEmpleado.add(descuentoTextField);
         descuentoTextField.setColumns(10);
+        
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setBounds(30, 173, 80, 25);
+        contentPanel.add(lblNombre);
+        
+        txtNombre = new JTextField();
+        txtNombre.setColumns(10);
+        txtNombre.setBounds(120, 173, 200, 25);
+        contentPanel.add(txtNombre);
 
         panelEmpleado.setVisible(false);
 
@@ -198,14 +206,14 @@ public class RegCliente extends JDialog {
                             JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de visitante.");
                             return;
                         }
-                        Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), Integer.parseInt(cantComprasTextField.getText()));
+                        Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Integer.parseInt(cantComprasTextField.getText()));
                         Empresa.getInstance().insertarCliente(visitante);
                     } else if (btnEmpleado.isSelected()) {
                         if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || descuentoTextField.getText().isEmpty()) {
                             JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de empleado.");
                             return;
                         }
-                        Empleado empleado = new Empleado(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), Float.parseFloat(sueldoTotalTextField.getText()), Integer.parseInt(cantAniosTrabajandoTextField.getText()), Integer.parseInt(descuentoTextField.getText()));
+                        Empleado empleado = new Empleado(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Float.parseFloat(sueldoTotalTextField.getText()), Integer.parseInt(cantAniosTrabajandoTextField.getText()), Integer.parseInt(descuentoTextField.getText()));
                         Empresa.getInstance().insertarCliente(empleado);
                     }
                     limpiarCampos();

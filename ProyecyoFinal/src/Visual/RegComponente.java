@@ -69,6 +69,7 @@ public class RegComponente extends JDialog {
 
     public RegComponente(Componente aux) {
         setBounds(100, 100, 721, 522);
+        setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setLayout(null);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

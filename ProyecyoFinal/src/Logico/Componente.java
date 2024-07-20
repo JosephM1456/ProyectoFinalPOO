@@ -8,6 +8,7 @@ public abstract class Componente {
 	protected int CantidadDisponible;
 	protected String Marca;
 	protected String Modelo;
+	protected boolean seleccionado = false;
 	
 	
 	public Componente(String idComponente, String numeroSerie, float precio, int cantidadDisponible, String marca,
@@ -55,5 +56,11 @@ public abstract class Componente {
 	}
 	public void setModelo(String modelo) {
 		Modelo = modelo;
+	}
+	public boolean isSeleccionado() {
+		return seleccionado;
+	}
+	public void setSeleccionado(boolean seleccionado) {
+		this.seleccionado = seleccionado;
 	}
 }

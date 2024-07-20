@@ -172,7 +172,9 @@ public class Principal extends JFrame {
         btnFactura.setBackground(Color.BLACK);
         btnFactura.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+            	RegFactura regfactura = new RegFactura();
+            	regfactura.setVisible(true);
+            	regfactura.setModal(true);
             }
         });
         menuPanel.add(btnFactura);
