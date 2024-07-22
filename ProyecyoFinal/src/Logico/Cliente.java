@@ -3,6 +3,7 @@ package Logico;
 public abstract class Cliente {
 	protected String IdCliente;
 	protected String Direccion;
+	protected String Nombre;
 	protected String Telefono;
 	protected String Cedula;
 	
@@ -30,11 +31,18 @@ public abstract class Cliente {
 	public void setCedula(String cedula) {
 		Cedula = cedula;
 	}
-	public Cliente(String idCliente, String direccion, String telefono, String cedula) {
+	public String getNombre() {
+		return Nombre;
+	}
+	public void setNombre(String nombre) {
+		Nombre = nombre;
+	}
+	public Cliente(String idCliente, String direccion, String telefono, String cedula, String nombre) {
 		super();
 		IdCliente = idCliente;
 		Direccion = direccion;
 		Telefono = telefono;
 		Cedula = cedula;
+		Nombre = nombre;
 	}
 }
