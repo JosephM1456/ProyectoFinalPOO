@@ -30,6 +30,7 @@ import java.awt.Insets;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.LineBorder;
 
 public class Principal extends JFrame {
 
@@ -144,8 +145,8 @@ public class Principal extends JFrame {
         btnComponentes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	RegComponente regcomponente = new RegComponente(null);
-            	regcomponente.setVisible(true);
             	regcomponente.setModal(true);
+            	regcomponente.setVisible(true);
             }
         });
         menuPanel.add(btnComponentes);
@@ -156,7 +157,9 @@ public class Principal extends JFrame {
         btnListadoCompo.setBackground(Color.BLACK);
         btnListadoCompo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+            	ListComponentes ventana = new ListComponentes();
+            	ventana.setModal(true);
+            	ventana.setVisible(true);
             }
         });
         menuPanel.add(btnListadoCompo);
@@ -208,9 +211,6 @@ public class Principal extends JFrame {
         });
         menuPanel.add(btnListadoCliente);
         
-        JButton btnNewButton_1 = new JButton("New button");
-        menuPanel.add(btnNewButton_1);
-        
         constr.gridheight = 100;
         constr.gridwidth = 75;
         constr.fill = GridBagConstraints.NONE;
@@ -239,10 +239,10 @@ public class Principal extends JFrame {
         compPanel = new JPanel();
         scrollPane.setViewportView(compPanel);
         compPanel.setAutoscrolls(true);
-        FlowLayout fl_compPanel = new FlowLayout(FlowLayout.LEADING, 5, 0);
+        FlowLayout fl_compPanel = new FlowLayout(FlowLayout.LEADING, 10, 5);
         fl_compPanel.setAlignOnBaseline(true);
-        compPanel.setMinimumSize(new Dimension(360, 100));
-        compPanel.setPreferredSize(new Dimension(360, 1000));
+        compPanel.setMinimumSize(new Dimension(300, 100));
+        compPanel.setPreferredSize(new Dimension(340, 1000));
         compPanel.setMaximumSize(new Dimension(360, 5000));
         compPanel.setLayout(fl_compPanel);
         

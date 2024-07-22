@@ -58,7 +58,28 @@ public class RegComponente extends JDialog {
     private JRadioButton btnTarjetaMadre;
 
     public static void main(String[] args) {
-        try {
+		Empresa.getInstance();
+		
+//		DiscoDuro d1 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Rawr", "SATA-1", (float)1024.0);
+//		DiscoDuro d2 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Hola", "IDE", (float)1024.0);
+//		DiscoDuro d3 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Hol", "IDE", (float)1024.0);
+//		DiscoDuro d4 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Ho", "IDE", (float)1024.0);
+//		DiscoDuro d5 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Huh?", "IDE", (float)1024.0);
+//		DiscoDuro d6 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "mambo", "IDE", (float)1024.0);
+//		DiscoDuro d7 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Vota #1 L24", "Lui Abinad", "PRM", (float)1024.0);
+//		
+//		Empresa.getInstance().insertarComponente(d1);
+//		Empresa.getInstance().insertarComponente(d2);
+//		Empresa.getInstance().insertarComponente(d3);
+//		Empresa.getInstance().insertarComponente(d4);
+//		Empresa.getInstance().insertarComponente(d5);
+//		Empresa.getInstance().insertarComponente(d6);
+//		Empresa.getInstance().insertarComponente(d7);
+//		
+//		Principal ventana = new Principal();
+//		ventana.setVisible(true);
+    	
+    	try {
             RegComponente dialog = new RegComponente(null);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
@@ -201,28 +222,6 @@ public class RegComponente extends JDialog {
         });
         group.add(btnTarjetaMadre);
         layeredPane.add(btnTarjetaMadre, new Integer(1));
-
-        MouseAdapter ma = new MouseAdapter() {
-            private Point offset;
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                offset = e.getPoint();
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                JRadioButton button = (JRadioButton) e.getSource();
-                Point newLocation = button.getLocation();
-                newLocation.translate(e.getX() - offset.x, e.getY() - offset.y);
-                button.setLocation(newLocation);
-            }
-        };
-
-        btnDiscoDuro.addMouseMotionListener(ma);
-        btnMicroProcesador.addMouseMotionListener(ma);
-        btnRAM.addMouseMotionListener(ma);
-        btnTarjetaMadre.addMouseMotionListener(ma);
 
         panelDiscoDuro = new JPanel();
         panelDiscoDuro.setBounds(15, 320, 400, 80);
@@ -373,15 +372,14 @@ public class RegComponente extends JDialog {
         okButton.setActionCommand("OK");
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                dispose();
-            }
+        
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		dispose();
+        	}
         });
-        cancelButton.setActionCommand("Cancel");
-        buttonPane.add(cancelButton);
+        buttonPane.add(btnCancelar);
     }
 
     private void limpiarCampos() {
