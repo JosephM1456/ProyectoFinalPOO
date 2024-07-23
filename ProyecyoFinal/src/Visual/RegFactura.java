@@ -38,8 +38,7 @@ public class RegFactura extends JDialog {
 	private JTextField txtPrecioTotal;
 	private JTextField txtDescuento;
 	private JTable table;
-	private JTable table_1;
-	private  DefaultTableModel modelo;
+	private DefaultTableModel modelo;
 	private DefaultTableModel modelo1;
 	private Object dispRow[];
 	private Object cartRow[];
@@ -49,6 +48,7 @@ public class RegFactura extends JDialog {
 	private JButton btnFacturar;
 	private JButton btnCancelar;
 	private ArrayList<Componente> componentesCarrito = new ArrayList<>();
+	private JTable table_1;
 
 	/**
 	 * Launch the application.
@@ -137,7 +137,7 @@ public class RegFactura extends JDialog {
 					btnEliminar.setEnabled(false);
 				}
 			});
-			String[] headers = {"Código","Nombre","Direccion","Cant de Prestamos"};
+			String[] headers = {"Código","Modelo","Marca","Num de Serie", "Precio"};
 			modelo.setColumnIdentifiers(headers);
 			table.setModel(modelo);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -215,15 +215,15 @@ public class RegFactura extends JDialog {
 			table_1.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					btnEliminar.setEnabled(true);
 					btnAñadir.setEnabled(false);
+					btnEliminar.setEnabled(true);
 				}
 			});
-			String[] headers1 = {"Código","Nombre","Direccion","Cant de Prestamos"};
+			String[] headers1 = {"Código","Modelo","Marca","Num de Serie", "Precio"};
 			modelo1.setColumnIdentifiers(headers1);
 			table_1.setModel(modelo1);
 			table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			scrollPane.setViewportView(table_1);
+			scrollPane_1.setViewportView(table_1);
 			
 			
 			JLabel lblPrecioTotal = new JLabel("Precio Total:");
@@ -327,7 +327,6 @@ public class RegFactura extends JDialog {
     }
 	private void cargarCliente(String id) {
 		ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
-        modelo.setRowCount(0); 
         boolean encontrado = false;
         for (Cliente cliente : aux) {
             if (cliente.getIdCliente().equals(id)) {
