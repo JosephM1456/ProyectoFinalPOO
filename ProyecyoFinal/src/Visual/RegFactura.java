@@ -84,7 +84,7 @@ public class RegFactura extends JDialog {
 			panel.add(lblID);
 			
 			txtIdCliente = new JTextField();
-			txtIdCliente.setText("C-");
+			txtIdCliente.setText("CL-");
 			txtIdCliente.setBounds(60, 13, 161, 26);
 			panel.add(txtIdCliente);
 			txtIdCliente.setColumns(10);
@@ -305,26 +305,27 @@ public class RegFactura extends JDialog {
         }
     }
 	public void carritoUpload() {
-        float precioTotal = 0;
-		ArrayList<Componente> aux = Empresa.getInstance().getLosComponentes();
-        modelo1.setRowCount(0);
-        cartRow = new Object[table_1.getColumnCount()];
-        for (Componente componente : aux) {
-        	cartRow[0] = componente.getIdComponente();
-        	precioTotal += componente.getPrecio();
-        	cartRow[1] = componente.getModelo();
-        	cartRow[2] = componente.getMarca();
-        	cartRow[3] = componente.getNumeroSerie();
-        	cartRow[4] = componente.getPrecio();
-            modelo1.addRow(cartRow);
-        }
-        txtPrecioTotal.setText(String.format("%.2f$", precioTotal));
-		if(precioTotal != 0.0) {
-			btnFacturar.setEnabled(true);
-		}else {
-			btnFacturar.setEnabled(false);
-		}
-    }
+	    float precioTotal = 0;
+	    modelo1.setRowCount(0);
+	    cartRow = new Object[table_1.getColumnCount()];
+	    
+	    for (Componente componente : componentesCarrito) {
+	        cartRow[0] = componente.getIdComponente();
+	        cartRow[1] = componente.getModelo();
+	        cartRow[2] = componente.getMarca();
+	        cartRow[3] = componente.getNumeroSerie();
+	        cartRow[4] = componente.getPrecio();
+	        modelo1.addRow(cartRow);
+	        precioTotal += componente.getPrecio();
+	    }
+	    
+	    txtPrecioTotal.setText(String.format("%.2f$", precioTotal));
+	    if(precioTotal != 0.0) {
+	        btnFacturar.setEnabled(true);
+	    } else {
+	        btnFacturar.setEnabled(false);
+	    }
+	}
 	private void cargarCliente(String id) {
 		ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
         boolean encontrado = false;
@@ -360,7 +361,7 @@ public class RegFactura extends JDialog {
         }
 	}
 	private void clean() {
-	    txtIdCliente.setText("C-");
+	    txtIdCliente.setText("CL-");
 	    txtNombre.setText("");
 	    txtDireccion.setText("");
 	    txtIdProducto.setText("P-");
