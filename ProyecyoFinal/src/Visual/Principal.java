@@ -8,8 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
+import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,17 +19,17 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
+import Logico.ArchivoEmpresa;
 import Logico.Componente;
-import Logico.DiscoDuro;
 import Logico.Empresa;
-
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.LineBorder;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class Principal extends JFrame {
 
@@ -52,20 +51,20 @@ public class Principal extends JFrame {
                     break;
                 }
             }
-            UIManager.put("control", new Color(50, 50, 50)); 
-            UIManager.put("info", new Color(50, 50, 50)); 
-            UIManager.put("nimbusBase", new Color(0, 0, 0)); 
-            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0)); 
-            UIManager.put("nimbusDisabledText", new Color(128, 128, 128)); 
-            UIManager.put("nimbusFocus", new Color(0, 255, 0)); 
-            UIManager.put("nimbusGreen", new Color(0, 255, 0)); 
-            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221)); 
-            UIManager.put("nimbusLightBackground", new Color(50, 50, 50)); 
-            UIManager.put("nimbusOrange", new Color(255, 200, 0)); 
-            UIManager.put("nimbusRed", new Color(169, 46, 34)); 
-            UIManager.put("nimbusSelectedText", new Color(255, 255, 255)); 
+            UIManager.put("control", new Color(50, 50, 50));
+            UIManager.put("info", new Color(50, 50, 50));
+            UIManager.put("nimbusBase", new Color(0, 0, 0));
+            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0));
+            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
+            UIManager.put("nimbusFocus", new Color(0, 255, 0));
+            UIManager.put("nimbusGreen", new Color(0, 255, 0));
+            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
+            UIManager.put("nimbusLightBackground", new Color(50, 50, 50));
+            UIManager.put("nimbusOrange", new Color(255, 200, 0));
+            UIManager.put("nimbusRed", new Color(169, 46, 34));
+            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
             UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
-            UIManager.put("text", new Color(255, 255, 255)); 
+            UIManager.put("text", new Color(255, 255, 255));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,34 +82,7 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
-    	
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-            UIManager.put("control", new Color(50, 50, 50)); 
-            UIManager.put("info", new Color(50, 50, 50)); 
-            UIManager.put("nimbusBase", new Color(0, 0, 0)); 
-            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0)); 
-            UIManager.put("nimbusDisabledText", new Color(128, 128, 128)); 
-            UIManager.put("nimbusFocus", new Color(0, 255, 0)); 
-            UIManager.put("nimbusGreen", new Color(0, 255, 0)); 
-            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221)); 
-            UIManager.put("nimbusLightBackground", new Color(50, 50, 50)); 
-            UIManager.put("nimbusOrange", new Color(255, 200, 0)); 
-            UIManager.put("nimbusRed", new Color(169, 46, 34)); 
-            UIManager.put("nimbusSelectedText", new Color(255, 255, 255)); 
-            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
-            UIManager.put("text", new Color(255, 255, 255)); 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    	
-    	
-        setTitle("Sistema de Facturas y Publicaciones");
+        setTitle("");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         dim = getToolkit().getScreenSize();
@@ -144,9 +116,9 @@ public class Principal extends JFrame {
         btnComponentes.setBackground(Color.BLACK);
         btnComponentes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	RegComponente regcomponente = new RegComponente(null);
-            	regcomponente.setModal(true);
-            	regcomponente.setVisible(true);
+                RegComponente regcomponente = new RegComponente(null);
+                regcomponente.setModal(true);
+                regcomponente.setVisible(true);
             }
         });
         menuPanel.add(btnComponentes);
@@ -157,9 +129,9 @@ public class Principal extends JFrame {
         btnListadoCompo.setBackground(Color.BLACK);
         btnListadoCompo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	ListComponentes ventana = new ListComponentes();
-            	ventana.setModal(true);
-            	ventana.setVisible(true);
+                ListComponentes ventana = new ListComponentes();
+                ventana.setModal(true);
+                ventana.setVisible(true);
             }
         });
         menuPanel.add(btnListadoCompo);
@@ -170,9 +142,9 @@ public class Principal extends JFrame {
         btnFactura.setBackground(Color.BLACK);
         btnFactura.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	RegFactura regfactura = new RegFactura();
-            	regfactura.setVisible(true);
-            	regfactura.setModal(true);
+                RegFactura regfactura = new RegFactura();
+                regfactura.setModal(true);
+                regfactura.setVisible(true);
             }
         });
         menuPanel.add(btnFactura);
@@ -194,9 +166,9 @@ public class Principal extends JFrame {
         btnCliente.setBackground(Color.BLACK);
         btnCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	RegCliente regcliente = new RegCliente(null);
-            	regcliente.setModal(true);
-            	regcliente.setVisible(true);
+                RegCliente regcliente = new RegCliente(null);
+                regcliente.setModal(true);
+                regcliente.setVisible(true);
 
             }
         });
@@ -208,11 +180,11 @@ public class Principal extends JFrame {
         btnListadoCliente.setBackground(Color.BLACK);
         btnListadoCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
- 
+
             }
         });
         menuPanel.add(btnListadoCliente);
-        
+
         constr.gridheight = 100;
         constr.gridwidth = 75;
         constr.fill = GridBagConstraints.NONE;
@@ -231,13 +203,13 @@ public class Principal extends JFrame {
         panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 255, 0)));
         contentPane.add(panel_1, BorderLayout.CENTER);
         panel_1.setLayout(null);
-        
+
         scrollPane = new JScrollPane();
         scrollPane.setBounds(15, 16, 360, 876);
         panel_1.add(scrollPane);
         scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         scrollPane.setBorder(new TitledBorder(null, "Componentes", TitledBorder.LEADING, TitledBorder.TOP, null, Color.GREEN));
-        
+
         compPanel = new JPanel();
         scrollPane.setViewportView(compPanel);
         compPanel.setAutoscrolls(true);
@@ -247,75 +219,31 @@ public class Principal extends JFrame {
         compPanel.setPreferredSize(new Dimension(340, 1000));
         compPanel.setMaximumSize(new Dimension(360, 5000));
         compPanel.setLayout(fl_compPanel);
-        
-        JPanel panel_2 = new JPanel();
-        panel_2.setBounds(496, 95, 151, 233);
-        panel_1.add(panel_2);
-        GridBagLayout gbl_panel_2 = new GridBagLayout();
-        gbl_panel_2.columnWidths = new int[]{121, 0};
-        gbl_panel_2.rowHeights = new int[]{125, 108, 0};
-        gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-        gbl_panel_2.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-        panel_2.setLayout(gbl_panel_2);
-        
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
-        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-        gbc_lblNewLabel.gridx = 0;
-        gbc_lblNewLabel.gridy = 0;
-        panel_2.add(lblNewLabel, gbc_lblNewLabel);
-        
-        JTextArea textArea = new JTextArea();
-        GridBagConstraints gbc_textArea = new GridBagConstraints();
-        gbc_textArea.fill = GridBagConstraints.BOTH;
-        gbc_textArea.insets = new Insets(0, 0, 5, 0);
-        gbc_textArea.gridx = 0;
-        gbc_textArea.gridy = 1;
-        panel_2.add(textArea, gbc_textArea);
-//       
 
-        loadComp();
-    }
-    
-    protected void moverListaDerecha() {
-		// TODO Auto-generated method stub
-		if(rangoInf < listaComp.size()-1)
-		{
-			rangoSup += 1;
-		}	
-	}
-    
-    protected void moverListaIzquierda()
-    {
-    	if(rangoSup > 0)
-    	{
-    		rangoSup -= 1;
-    	}	
+        cargarEmpresa();
+
+   
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                guardarEmpresa();
+            }
+        });
     }
 
-	public void loadComp()
-    {
-		if(listaComp.isEmpty())
-			return;
-		//rangoInf = rangoSup + 6;
-		
-    	for(int ind = rangoSup; ind < listaComp.size(); ind++)
-    	{
+    private void cargarEmpresa() {
+        try {
+            ArchivoEmpresa.getInstance().cargarEmpresa("empresa.txt");
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-    		PanelComponente pan = new PanelComponente(listaComp.get(ind));
-    		if(ind == 6)
-    		{
-    			pan.getLbl().setIcon(new ImageIcon(new ImageIcon(Principal.class.getResource("/img/lui.png")).getImage().getScaledInstance(110, 100, 0)));
-    		}
-    		compPanel.add(pan);
-    		compPanel.revalidate();
-    		compPanel.repaint();
-    		
-    	}
-	    //panel_1.revalidate();
-	   	//panel_1.repaint();
-
-    	
+    private void guardarEmpresa() {
+        try {
+            ArchivoEmpresa.getInstance().guardarEmpresa(Empresa.getInstance());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

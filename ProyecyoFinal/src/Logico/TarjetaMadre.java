@@ -1,8 +1,10 @@
 package Logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TarjetaMadre extends Componente {
+public class TarjetaMadre extends Componente implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private String Conector;
 	private String TipoRam;

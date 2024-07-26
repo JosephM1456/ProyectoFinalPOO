@@ -1,6 +1,9 @@
 package Logico;
 
-public class Visitante extends Cliente {
+import java.io.Serializable;
+
+public class Visitante extends Cliente implements Serializable{
+	private static final long serialVersionUID = 1L;
 	int CantCompras;
 
 	public int getCantCompras() {

@@ -1,6 +1,9 @@
 package Logico;
 
-public class Empleado extends Cliente {
+import java.io.Serializable;
+
+public class Empleado extends Cliente implements Serializable {
+	private static final long serialVersionUID = 1L;
 	float SueldoTotal;
 	int CantAniosTrabajando;
 	int Descuento;

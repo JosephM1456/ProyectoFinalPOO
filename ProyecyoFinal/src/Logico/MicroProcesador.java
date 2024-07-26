@@ -1,6 +1,9 @@
 package Logico;
 
-public class MicroProcesador extends Componente {
+import java.io.Serializable;
+
+public class MicroProcesador extends Componente implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String TipoConex;
 	private float VelProcesamientoGHz;
 	

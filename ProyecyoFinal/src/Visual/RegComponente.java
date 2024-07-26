@@ -1,6 +1,7 @@
 package Visual;
 
 import java.awt.BorderLayout;
+
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
@@ -8,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -20,12 +23,14 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JLayeredPane;
 
+import Logico.ArchivoEmpresa;
 import Logico.Componente;
 import Logico.Empresa;
 import Logico.DiscoDuro;
 import Logico.MicroProcesador;
 import Logico.RAM;
 import Logico.TarjetaMadre;
+
 
 import java.util.ArrayList;
 
@@ -88,7 +93,7 @@ public class RegComponente extends JDialog {
         }
     }
 
-    public RegComponente(Componente aux) {
+    public RegComponente(Componente aux){
         setBounds(100, 100, 721, 522);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
@@ -99,7 +104,7 @@ public class RegComponente extends JDialog {
         JLabel lblId = new JLabel("ID:");
         lblId.setBounds(54, 20, 80, 25);
         contentPanel.add(lblId);
-
+        cargarEmpresa();
         idTextField = new JTextField();
         idTextField.setEditable(false);
         idTextField.setBounds(144, 20, 200, 25);
@@ -108,9 +113,10 @@ public class RegComponente extends JDialog {
         if (aux != null) {
             idTextField.setText(aux.getIdComponente());
         } else {
-            idTextField.setText("C-" + Empresa.getIdComponente());
+            idTextField.setText("C-" + Empresa.getInstance().countIdComponente());
         }
 
+        
         JLabel lblNumSerie = new JLabel("Num Serie:");
         lblNumSerie.setBounds(54, 56, 80, 25);
         contentPanel.add(lblNumSerie);
@@ -361,7 +367,7 @@ public class RegComponente extends JDialog {
                             TarjetaMadre tarjetaMadre = new TarjetaMadre(id, numSerie, precio, cantDisp, marca, modelo, conector, tipoRam, conexiones);
                             Empresa.getInstance().insertarComponente(tarjetaMadre);
                         }
-
+                        guardarEmpresa();
                         limpiarCampos();
                         JOptionPane.showMessageDialog(null, "Componente registrado con éxito.");
                     } catch (NumberFormatException e) {
@@ -384,7 +390,7 @@ public class RegComponente extends JDialog {
     }
 
     private void limpiarCampos() {
-    	idTextField.setText("C-" + Empresa.getIdComponente());
+    	idTextField.setText("C-" + Empresa.getInstance().countIdComponente());
         numSerieTextField.setText("");
         precioTextField.setText("");
         cantDispTextField.setText("");
@@ -399,4 +405,21 @@ public class RegComponente extends JDialog {
         tipoRamTextField.setText("");
         tipoConexTextField2.setText("");
     }
+    
+    private void cargarEmpresa() {
+        try {
+            ArchivoEmpresa.getInstance().cargarEmpresa("empresa.txt");
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void guardarEmpresa() {
+        try {
+            ArchivoEmpresa.getInstance().guardarEmpresa(Empresa.getInstance());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
 }

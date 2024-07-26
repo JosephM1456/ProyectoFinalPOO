@@ -1,6 +1,9 @@
 package Logico;
 
-public abstract class Cliente {
+import java.io.Serializable;
+
+public abstract class Cliente implements Serializable {
+	private static final long serialVersionUID = 1L;
 	protected String IdCliente;
 	protected String Direccion;
 	protected String Nombre;

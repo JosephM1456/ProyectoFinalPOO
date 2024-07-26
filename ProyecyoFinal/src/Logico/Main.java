@@ -6,7 +6,7 @@ import Visual.Principal;
 
 public class Main {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Empresa.getInstance();
 		
@@ -36,6 +36,6 @@ public class Main {
 		Principal ventana = new Principal();
 		ventana.setVisible(true);
 		
-	}
+	}*/
 
 }

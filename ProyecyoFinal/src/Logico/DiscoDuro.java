@@ -1,6 +1,9 @@
 package Logico;
 
-public class DiscoDuro extends Componente {
+import java.io.Serializable;
+
+public class DiscoDuro extends Componente implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private String TipoConex;
 	private float CapAlmacenamiento;

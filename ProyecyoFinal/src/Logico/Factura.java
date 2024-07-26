@@ -1,8 +1,10 @@
 package Logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Factura {
+public class Factura implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String IdFactura;
 	private float CostoTotal;
 	private ArrayList<Componente>LosComponentes;

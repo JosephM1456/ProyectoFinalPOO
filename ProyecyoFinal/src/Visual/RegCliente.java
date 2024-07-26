@@ -30,7 +30,6 @@ public class RegCliente extends JDialog {
     private JTextField direccionTextField;
     private JTextField telefonoTextField;
     private JTextField cedulaTextField;
-    private JTextField cantComprasTextField;
     private JTextField sueldoTotalTextField;
     private JTextField cantAniosTrabajandoTextField;
     private JTextField descuentoTextField;
@@ -72,7 +71,7 @@ public class RegCliente extends JDialog {
         if (aux != null) {
             idTextField.setText(aux.getIdCliente());
         } else {
-            idTextField.setText("CL-" + Empresa.getIdCliente());
+            idTextField.setText("CL-" + Empresa.getInstance().countIdCliente());
         }
 
         JLabel lblDireccion = new JLabel("Direccion:");
@@ -139,15 +138,6 @@ public class RegCliente extends JDialog {
         contentPanel.add(panelVisitante);
         panelVisitante.setLayout(null);
 
-        JLabel lblCantCompras = new JLabel("Cant. Compras:");
-        lblCantCompras.setBounds(10, 10, 100, 25);
-        panelVisitante.add(lblCantCompras);
-
-        cantComprasTextField = new JTextField();
-        cantComprasTextField.setBounds(120, 10, 200, 25);
-        panelVisitante.add(cantComprasTextField);
-        cantComprasTextField.setColumns(10);
-
         panelEmpleado = new JPanel();
         panelEmpleado.setBounds(30, 270, 400, 160);
         contentPanel.add(panelEmpleado);
@@ -202,11 +192,7 @@ public class RegCliente extends JDialog {
                     JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
                 } else {
                     if (btnVisitante.isSelected()) {
-                        if (cantComprasTextField.getText().isEmpty()) {
-                            JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de visitante.");
-                            return;
-                        }
-                        Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Integer.parseInt(cantComprasTextField.getText()));
+                        Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(),0);
                         Empresa.getInstance().insertarCliente(visitante);
                     } else if (btnEmpleado.isSelected()) {
                         if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || descuentoTextField.getText().isEmpty()) {
@@ -231,10 +217,11 @@ public class RegCliente extends JDialog {
     }
 
     private void limpiarCampos() {
+    	idTextField.setText("CL-" + Empresa.getInstance().countIdCliente());
         direccionTextField.setText("");
+        txtNombre.setText("");
         telefonoTextField.setText("");
         cedulaTextField.setText("");
-        cantComprasTextField.setText("");
         sueldoTotalTextField.setText("");
         cantAniosTrabajandoTextField.setText("");
         descuentoTextField.setText("");

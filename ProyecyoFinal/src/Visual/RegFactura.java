@@ -196,7 +196,7 @@ public class RegFactura extends JDialog {
 			panel.add(btnAñadir);
 			
 			txtIdProducto = new JTextField();
-			txtIdProducto.setText("P-");
+			txtIdProducto.setText("C-");
 			txtIdProducto.setBounds(25, 225, 125, 26);
 			panel.add(txtIdProducto);
 			txtIdProducto.setColumns(10);
@@ -260,7 +260,7 @@ public class RegFactura extends JDialog {
 				btnFacturar = new JButton("Facturar");
 				btnFacturar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String idFactura = "F-" + (Empresa.getInstance().getLasFacturas().size() + 1);
+						String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
 				        float costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
 				        Cliente cliente = Empresa.getInstance().buscarClienteById(txtIdCliente.getText());
 				        if (cliente != null) {

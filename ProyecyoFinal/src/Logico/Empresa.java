@@ -1,8 +1,11 @@
 package Logico;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Empresa {
+public class Empresa implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Componente>LosComponentes;
 	private ArrayList<Cliente>LosClientes;
 	private ArrayList<Factura>LasFacturas;
@@ -61,9 +64,10 @@ public class Empresa {
 	}
 	
 	
-	public void insertarComponente(Componente v1) {
+	public void insertarComponente(Componente v1)  {
 		LosComponentes.add(v1);
 		IdComponente++;
+	
 	}
 	public void insertarCliente(Cliente v1) {
 		LosClientes.add(v1);
@@ -156,4 +160,33 @@ public class Empresa {
 	        }
 	        return componentesSeleccionados;
 	    }
+	public static void setInstance(Empresa NewEmpresa) {
+		miEmpresa = NewEmpresa;
+		
+	}
+	
+	public int countIdComponente() {
+		int countId = 0;
+		for (int i = 0; i < LosComponentes.size();i++) {
+			countId++;
+		}
+		countId = countId + 1;
+		return countId;
+	}
+	public int countIdCliente() {
+		int countId = 0;
+		for (int i = 0; i < LosClientes.size();i++) {
+			countId++;
+		}
+		countId = countId + 1;
+		return countId;
+	}
+	public int countIdFactura() {
+		int countId = 0;
+		for (int i = 0; i < LasFacturas.size();i++) {
+			countId++;
+		}
+		countId = countId + 1;
+		return countId;
+	}
 }
