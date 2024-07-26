@@ -42,6 +42,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import java.awt.event.KeyAdapter;
@@ -87,35 +90,6 @@ public class ListComponentes extends JDialog {
 	 */
 	public static void main(String[] args) {
 		
-//		DiscoDuro d1 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Rawr", "SATA-1", (float)1024.0);
-//		DiscoDuro d2 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Hola", "IDE", (float)1024.0);
-//		DiscoDuro d3 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Hol", "IDE", (float)1024.0);
-//		DiscoDuro d4 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Ho", "IDE", (float)1024.0);
-//		DiscoDuro d5 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "Huh?", "IDE", (float)1024.0);
-//		DiscoDuro d6 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Nvidia", "mambo", "IDE", (float)1024.0);
-//		DiscoDuro d7 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "Vota #1 L24", "Lui Abinad", "PRM", (float)1024.0);
-//		DiscoDuro d8 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "ooooo", "aaa", "eee", (float)1024.0);
-//		DiscoDuro d9 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "321", "231", "213", (float)1024.0);
-//		DiscoDuro d10 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "a", "e", "i", (float)1024.0);
-//		DiscoDuro d11 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "o", "u", "uuu", (float)1024.0);
-//		//DiscoDuro d12 = new DiscoDuro("C-0", "D10", (float)150.10 , 3, "qwe", "231", "213", (float)1024.0);
-//
-//		
-//		Empresa.getInstance().insertarComponente(d1);
-//		Empresa.getInstance().insertarComponente(d2);
-//		Empresa.getInstance().insertarComponente(d3);
-//		Empresa.getInstance().insertarComponente(d4);
-//		Empresa.getInstance().insertarComponente(d5);
-//		Empresa.getInstance().insertarComponente(d6);
-//		Empresa.getInstance().insertarComponente(d7);
-//		Empresa.getInstance().insertarComponente(d8);
-//		Empresa.getInstance().insertarComponente(d9);
-//		Empresa.getInstance().insertarComponente(d10);
-//		Empresa.getInstance().insertarComponente(d11);
-		//Empresa.getInstance().insertarComponente(d12);
-		
-		Principal ventana = new Principal();
-		ventana.setVisible(true);
 		
 		try {
 			ListComponentes dialog = new ListComponentes();
@@ -242,6 +216,7 @@ public class ListComponentes extends JDialog {
 						if(componentSelect instanceof PanelComponente)
 						{
 							idSelect = new String(((PanelComponente)componentSelect).getComp().getIdComponente());
+							//System.out.println(((PanelComponente)componentSelect).getComp().getIdComponente()+"\t"+((PanelComponente)componentSelect).getComp().getModelo()+"\t"+((PanelComponente)componentSelect).getComp().getPrecio());
 							btnEliminar.setEnabled(true);
 							btnActualizar.setEnabled(true);
 							((JComponent) componentSelect).setBorder(new LineBorder(new Color(0, 255, 0), 2));
@@ -312,8 +287,29 @@ public class ListComponentes extends JDialog {
 							public void actionPerformed(ActionEvent arg0) {
 								Componente comp = Empresa.getInstance().buscarCompoById(idSelect);
 								RegComponente ventana = new RegComponente(comp);
+								ventana.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 								ventana.setModal(true);
 								ventana.setVisible(true);
+								ventana.addWindowListener(new WindowAdapter() {
+									
+									public void windowClosed(WindowEvent arg0)
+									{
+										System.out.println("windowClosed event triggered");
+										//panelLista.removeAll();
+										//loadComp(tipoSelect);
+										if(componentSelect instanceof PanelComponente)
+										{
+											((PanelComponente)componentSelect).getTxt().setText("Marca: "+comp.getMarca()+"\nModelo: "+comp.getModelo()+"\nPrecio: "+comp.getPrecio() );
+											((PanelComponente)componentSelect).getTxt().revalidate();
+											((PanelComponente)componentSelect).getTxt().repaint();
+										}
+										panelLista.revalidate();
+										panelLista.repaint();
+										ventana.dispose();
+									}
+								});								
+								
+
 							}
 						});
 						btnActualizar.setEnabled(false);
@@ -358,7 +354,7 @@ public class ListComponentes extends JDialog {
 					}
 					else input = new String("");
 					
-					System.out.println(input);
+					//System.out.println(input);
 
 					if(rdBtnNombre.isSelected() && !input.equalsIgnoreCase(""))
 					{

@@ -10,26 +10,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import Logico.ArchivoEmpresa;
-import Logico.Componente;
 import Logico.Empresa;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.GridBagConstraints;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+
 
 public class Principal extends JFrame {
 
@@ -37,11 +32,8 @@ public class Principal extends JFrame {
     private Dimension dim;
     private JPanel panel_1;
     private GridBagConstraints constr = new GridBagConstraints();
-    private JPanel compPanel;
-    private ArrayList<Componente> listaComp = Empresa.getInstance().getLosComponentes();
-    private int rangoSup = 0;
-    private int rangoInf = 0;
-    private JScrollPane scrollPane;
+
+
 
     public static void main(String[] args) {
         try {
@@ -204,22 +196,6 @@ public class Principal extends JFrame {
         contentPane.add(panel_1, BorderLayout.CENTER);
         panel_1.setLayout(null);
 
-        scrollPane = new JScrollPane();
-        scrollPane.setBounds(15, 16, 360, 876);
-        panel_1.add(scrollPane);
-        scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-        scrollPane.setBorder(new TitledBorder(null, "Componentes", TitledBorder.LEADING, TitledBorder.TOP, null, Color.GREEN));
-
-        compPanel = new JPanel();
-        scrollPane.setViewportView(compPanel);
-        compPanel.setAutoscrolls(true);
-        FlowLayout fl_compPanel = new FlowLayout(FlowLayout.LEADING, 10, 5);
-        fl_compPanel.setAlignOnBaseline(true);
-        compPanel.setMinimumSize(new Dimension(300, 100));
-        compPanel.setPreferredSize(new Dimension(340, 1000));
-        compPanel.setMaximumSize(new Dimension(360, 5000));
-        compPanel.setLayout(fl_compPanel);
-
         cargarEmpresa();
 
    
@@ -235,7 +211,7 @@ public class Principal extends JFrame {
         try {
             ArchivoEmpresa.getInstance().cargarEmpresa("empresa.txt");
         } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        	JOptionPane.showMessageDialog( null, "Datos de empresa no encontrados, iniciando programa con empresa nueva...");
         }
     }
 
@@ -243,7 +219,7 @@ public class Principal extends JFrame {
         try {
             ArchivoEmpresa.getInstance().guardarEmpresa(Empresa.getInstance());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al guardar los datos", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
