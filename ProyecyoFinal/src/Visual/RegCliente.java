@@ -188,7 +188,7 @@ public class RegCliente extends JDialog {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty()) {
+                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
                 } else {
                     if (btnVisitante.isSelected()) {
@@ -212,6 +212,11 @@ public class RegCliente extends JDialog {
         getRootPane().setDefaultButton(okButton);
 
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		dispose();
+        	}
+        });
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
     }

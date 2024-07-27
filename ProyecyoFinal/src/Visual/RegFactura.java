@@ -20,6 +20,7 @@ import Logico.Cliente;
 import Logico.Componente;
 import Logico.Empresa;
 import Logico.Factura;
+import Logico.Visitante;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 public class RegFactura extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtIdCliente;
+	private JTextField txtCedula;
 	private JButton btnBuscar1;
 	private JTextField txtDireccion;
 	private JTextField txtNombre;
@@ -49,6 +50,7 @@ public class RegFactura extends JDialog {
 	private JButton btnCancelar;
 	private ArrayList<Componente> componentesCarrito = new ArrayList<>();
 	private JTable table_1;
+	private JTextField txtTelefono;
 
 	/**
 	 * Launch the application.
@@ -79,43 +81,46 @@ public class RegFactura extends JDialog {
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(null);
 			
-			JLabel lblID = new JLabel("ID:");
-			lblID.setBounds(15, 16, 45, 20);
+			JLabel lblID = new JLabel("C\u00E9dula:");
+			lblID.setBounds(15, 16, 69, 20);
 			panel.add(lblID);
 			
-			txtIdCliente = new JTextField();
-			txtIdCliente.setText("CL-");
-			txtIdCliente.setBounds(60, 13, 161, 26);
-			panel.add(txtIdCliente);
-			txtIdCliente.setColumns(10);
+			txtCedula = new JTextField();
+			txtCedula.setBounds(91, 13, 177, 26);
+			panel.add(txtCedula);
+			txtCedula.setColumns(10);
 			
 			btnBuscar1 = new JButton("Buscar");
 			btnBuscar1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String id = txtIdCliente.getText();
-					cargarCliente(id);
+					String cedula = txtCedula.getText();
+			        if (cedula.isEmpty()) {
+			            JOptionPane.showMessageDialog(null, "Por favor, ingrese una cédula.", "Error", JOptionPane.ERROR_MESSAGE);
+			            return;
+			        }
+			        cargarCliente(cedula);
 				}
 			});
-			btnBuscar1.setBounds(236, 12, 115, 29);
+			btnBuscar1.setBounds(283, 12, 115, 29);
 			panel.add(btnBuscar1);
 			
 			JLabel lblDireccion = new JLabel("Direccion:");
-			lblDireccion.setBounds(376, 16, 91, 20);
+			lblDireccion.setBounds(413, 16, 91, 20);
 			panel.add(lblDireccion);
 			
 			txtDireccion = new JTextField();
 			txtDireccion.setEnabled(false);
-			txtDireccion.setBounds(471, 16, 333, 59);
+			txtDireccion.setBounds(519, 16, 285, 25);
 			panel.add(txtDireccion);
 			txtDireccion.setColumns(10);
 			
 			JLabel lblNombre = new JLabel("Nombre:");
-			lblNombre.setBounds(15, 55, 69, 20);
+			lblNombre.setBounds(15, 58, 69, 20);
 			panel.add(lblNombre);
 			
 			txtNombre = new JTextField();
 			txtNombre.setEnabled(false);
-			txtNombre.setBounds(111, 52, 333, 26);
+			txtNombre.setBounds(101, 55, 285, 26);
 			panel.add(txtNombre);
 			txtNombre.setColumns(10);
 			
@@ -251,6 +256,16 @@ public class RegFactura extends JDialog {
 			JLabel lblNewLabel = new JLabel("Codigo Producto:");
 			lblNewLabel.setBounds(24, 189, 129, 20);
 			panel.add(lblNewLabel);
+			
+			JLabel lblNewLabel_1 = new JLabel("Telefono:");
+			lblNewLabel_1.setBounds(413, 52, 69, 20);
+			panel.add(lblNewLabel_1);
+			
+			txtTelefono = new JTextField();
+			txtTelefono.setEnabled(false);
+			txtTelefono.setBounds(519, 52, 169, 26);
+			panel.add(txtTelefono);
+			txtTelefono.setColumns(10);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -262,14 +277,15 @@ public class RegFactura extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
 				        float costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
-				        Cliente cliente = Empresa.getInstance().buscarClienteById(txtIdCliente.getText());
+				        Cliente cliente = Empresa.getInstance().buscarClienteByCedula(txtCedula.getText());
+				     
 				        if (cliente != null) {
 				            Factura factura = new Factura(idFactura, costoTotal, new ArrayList<>(componentesCarrito), cliente);
 				            Empresa.getInstance().getLasFacturas().add(factura);
 				            JOptionPane.showMessageDialog(null, "Factura generada con éxito!", "Información", JOptionPane.INFORMATION_MESSAGE);
 				            clean();
 				        } else {
-				            JOptionPane.showMessageDialog(null, "No se encontró el cliente para generar la factura.", "Error", JOptionPane.ERROR_MESSAGE);
+				            JOptionPane.showMessageDialog(null, "No se pudo generar la factura. Verifique los datos del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
 				        }
 					}
 				});
@@ -326,45 +342,67 @@ public class RegFactura extends JDialog {
 	        btnFacturar.setEnabled(false);
 	    }
 	}
-	private void cargarCliente(String id) {
+	private void cargarCliente(String cedula) {
 		ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
         boolean encontrado = false;
         for (Cliente cliente : aux) {
-            if (cliente.getIdCliente().equals(id)) {
+            if (cliente.getCedula().equals(cedula)) {
             	txtNombre.setText(cliente.getNombre());
                 txtDireccion.setText(cliente.getDireccion());
+                txtTelefono.setText(cliente.getTelefono());
                 encontrado = true;
             }
             else if(!encontrado) {
-            	JOptionPane.showMessageDialog(this, "No se encontró ningún cliente con el ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(this, "No se encontró ningún cliente con la cédula: " + cedula, "Error", JOptionPane.ERROR_MESSAGE);
+            	txtNombre.setEnabled(true);
+                txtDireccion.setEnabled(true);
+                txtTelefono.setEnabled(true);
+            	registrarNuevoCliente();
             }
         }
 	}
+	private void registrarNuevoCliente() {
+	    String cedula = txtCedula.getText();
+	    String nombre = txtNombre.getText();
+	    String direccion = txtDireccion.getText();
+	    String telefono = txtTelefono.getText();
+	    int cantcompras = 1;
+	    
+	    if (nombre.isEmpty() || direccion.isEmpty() || telefono.isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    
+	    Cliente nuevoCliente = new Visitante("CL-" + (Empresa.getIdCliente() + 1), direccion, telefono, cedula, nombre, cantcompras);
+	    Empresa.getInstance().insertarCliente(nuevoCliente);;
+	    JOptionPane.showMessageDialog(this, "Nuevo cliente registrado con éxito.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+	}
 	private void cargarComponenteTabla(String id) {
 		ArrayList<Componente> aux = Empresa.getInstance().getLosComponentes();
-        modelo1.setRowCount(0); 
+		modelo.setRowCount(0); 
         boolean encontrado = false;
         for (Componente componente : aux) {
             if (componente.getIdComponente().equals(id)) {
-            	cartRow = new Object[table_1.getColumnCount()];
-            	cartRow[0] = componente.getIdComponente();
-            	cartRow[1] = componente.getModelo();
-            	cartRow[2] = componente.getMarca();
-            	cartRow[3] = componente.getNumeroSerie();
-            	cartRow[4] = componente.getPrecio();
-                modelo1.addRow(cartRow);
+            	dispRow = new Object[table.getColumnCount()];
+            	dispRow[0] = componente.getIdComponente();
+            	dispRow[1] = componente.getModelo();
+            	dispRow[2] = componente.getMarca();
+            	dispRow[3] = componente.getNumeroSerie();
+            	dispRow[4] = componente.getPrecio();
+            	modelo.addRow(dispRow);
                 encontrado = true;
             }
             else if(!encontrado) {
-            	JOptionPane.showMessageDialog(this, "No se encontró ningún componente con el ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(this, "No se encontró ningún componente con el ID: " + id, "Componente no encontrado", JOptionPane.INFORMATION_MESSAGE);
+            	loadComponentes();
             }
         }
 	}
 	private void clean() {
-	    txtIdCliente.setText("CL-");
+	    txtCedula.setText("");
 	    txtNombre.setText("");
 	    txtDireccion.setText("");
-	    txtIdProducto.setText("P-");
+	    txtIdProducto.setText("C-");
 	    txtPrecioTotal.setText("0.0$");
 	    txtDescuento.setText("0.0$");
 	    componentesCarrito.clear();

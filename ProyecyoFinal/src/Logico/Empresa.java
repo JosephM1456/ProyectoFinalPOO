@@ -95,6 +95,16 @@ public class Empresa implements Serializable {
 	    }
 	    return null;
 	}
+	
+	public Cliente buscarClienteByCedula(String cedula) {
+		for (Cliente buscar: LosClientes) {
+			if(buscar.getCedula().equals(cedula)) {
+				return buscar;
+			}
+		}
+		return null;
+	}
+	
 	public Factura buscarFacturaById(String id) {
 	    for (Factura buscar : LasFacturas) {
 	        if (buscar.getIdFactura().equalsIgnoreCase(id)) {
