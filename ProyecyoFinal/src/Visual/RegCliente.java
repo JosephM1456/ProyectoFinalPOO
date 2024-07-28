@@ -3,6 +3,7 @@ package Visual;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -188,23 +189,59 @@ public class RegCliente extends JDialog {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
-                } else {
-                    if (btnVisitante.isSelected()) {
-                        Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(),0);
-                        Empresa.getInstance().insertarCliente(visitante);
-                    } else if (btnEmpleado.isSelected()) {
-                        if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || descuentoTextField.getText().isEmpty()) {
-                            JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de empleado.");
-                            return;
-                        }
-                        Empleado empleado = new Empleado(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Float.parseFloat(sueldoTotalTextField.getText()), Integer.parseInt(cantAniosTrabajandoTextField.getText()), Integer.parseInt(descuentoTextField.getText()));
-                        Empresa.getInstance().insertarCliente(empleado);
-                    }
-                    limpiarCampos();
-                    JOptionPane.showMessageDialog(null, "Cliente registrado con éxito.");
-                }
+            	if(aux == null)
+            	{
+	                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+	                } else {
+	                    try {
+							if (btnVisitante.isSelected()) {
+							    Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(),0);
+							    Empresa.getInstance().insertarCliente(visitante);
+							} else if (btnEmpleado.isSelected()) {
+							    if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || descuentoTextField.getText().isEmpty()) {
+							        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de empleado.");
+							        return;
+							    }
+							    Empleado empleado = new Empleado(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Float.parseFloat(sueldoTotalTextField.getText()), Integer.parseInt(cantAniosTrabajandoTextField.getText()), Integer.parseInt(descuentoTextField.getText()));
+							    Empresa.getInstance().insertarCliente(empleado);
+							}
+
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", "Error de registro", JOptionPane.ERROR_MESSAGE);
+						}
+	                    limpiarCampos();
+	                    JOptionPane.showMessageDialog(null, "Cliente registrado con éxito.");
+	                }            		
+            	}
+            	else if(aux != null)
+            	{
+	                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+	                }
+	                else
+	                {
+	                	try
+	                	{
+	                		aux.setCedula(cedulaTextField.getText());
+	                		aux.setTelefono(telefonoTextField.getText());
+	                		aux.setNombre(txtNombre.getText());
+	                		aux.setDireccion(direccionTextField.getText());
+	                		if(btnEmpleado.isSelected())
+	                		{
+	                			((Empleado)aux).setCantAniosTrabajando(Integer.parseInt(cantAniosTrabajandoTextField.getText()));
+	                			((Empleado)aux).setDescuento(Integer.parseInt(descuentoTextField.getText()));
+	                			((Empleado)aux).setSueldoTotal(Float.parseFloat(sueldoTotalTextField.getText()));
+	                		}
+	                		JOptionPane.showMessageDialog(null, "Cliente actualizado con éxito.");
+	                		dispose();
+	                	}
+	                	catch(NumberFormatException e)
+	                	{
+	                		JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", "Error de registro", JOptionPane.ERROR_MESSAGE);
+	                	}
+	                }
+            	}
             }
         });
         okButton.setActionCommand("OK");
@@ -219,6 +256,11 @@ public class RegCliente extends JDialog {
         });
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
+        
+        if(aux != null)
+        {
+        	modoActualizar(aux);
+        }
     }
 
     private void limpiarCampos() {
@@ -233,5 +275,28 @@ public class RegCliente extends JDialog {
         btnVisitante.setSelected(true);
         panelVisitante.setVisible(true);
         panelEmpleado.setVisible(false);
+    }
+    
+    private void modoActualizar(Cliente cliente)
+    {
+    	btnEmpleado.setEnabled(false);
+    	btnVisitante.setEnabled(false);
+    	idTextField.setEnabled(false);
+    	idTextField.setText(cliente.getIdCliente());
+    	cedulaTextField.setText(cliente.getCedula());
+    	direccionTextField.setText(cliente.getDireccion());
+    	txtNombre.setText(cliente.getNombre());
+    	telefonoTextField.setText(cliente.getTelefono());
+    	
+    	if(cliente instanceof Empleado)
+    	{
+    		panelVisitante.setVisible(false);
+    		panelEmpleado.setVisible(true);
+    		btnEmpleado.setSelected(true);
+    		cantAniosTrabajandoTextField.setText( ((Integer)((Empleado)cliente).getCantAniosTrabajando()).toString() );
+    		descuentoTextField.setText( ((Integer)( (Empleado)cliente).getDescuento()).toString() );
+    		sueldoTotalTextField.setText( ((Float)((Empleado)cliente).getSueldoTotal()).toString() );
+    	}
+    	else btnVisitante.setSelected(true);
     }
 }

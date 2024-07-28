@@ -24,6 +24,8 @@ import Logico.Empresa;
 import java.awt.GridBagConstraints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 
 public class Principal extends JFrame {
@@ -43,20 +45,20 @@ public class Principal extends JFrame {
                     break;
                 }
             }
-            UIManager.put("control", new Color(50, 50, 50));
-            UIManager.put("info", new Color(50, 50, 50));
-            UIManager.put("nimbusBase", new Color(0, 0, 0));
-            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0));
-            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
-            UIManager.put("nimbusFocus", new Color(0, 255, 0));
-            UIManager.put("nimbusGreen", new Color(0, 255, 0));
-            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
-            UIManager.put("nimbusLightBackground", new Color(50, 50, 50));
-            UIManager.put("nimbusOrange", new Color(255, 200, 0));
-            UIManager.put("nimbusRed", new Color(169, 46, 34));
-            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
-            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
-            UIManager.put("text", new Color(255, 255, 255));
+//            UIManager.put("control", new Color(50, 50, 50));
+//            UIManager.put("info", new Color(50, 50, 50));
+//            UIManager.put("nimbusBase", new Color(0, 0, 0));
+//            UIManager.put("nimbusAlertYellow", new Color(255, 223, 0));
+//            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
+//            UIManager.put("nimbusFocus", new Color(0, 255, 0));
+//            UIManager.put("nimbusGreen", new Color(0, 255, 0));
+//            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
+//            UIManager.put("nimbusLightBackground", new Color(50, 50, 50));
+//            UIManager.put("nimbusOrange", new Color(255, 200, 0));
+//            UIManager.put("nimbusRed", new Color(169, 46, 34));
+//            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
+//            UIManager.put("nimbusSelectionBackground", new Color(0, 255, 0));
+//            UIManager.put("text", new Color(255, 255, 255));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +76,8 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
-        setTitle("");
+    	setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/img/black_server_icon-icons.com_76717.png")));
+        setTitle("SystemComputerMaster Enterprise");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         dim = getToolkit().getScreenSize();
@@ -88,24 +91,20 @@ public class Principal extends JFrame {
 
         // Custom title panel
         JPanel titlePanel = new JPanel();
-        titlePanel.setBackground(Color.BLACK);
         titlePanel.setPreferredSize(new Dimension(contentPane.getWidth(), 50));
         contentPane.add(titlePanel, BorderLayout.NORTH);
 
-        JLabel titleLabel = new JLabel("Nombre de Tienda");
-        titleLabel.setForeground(Color.GREEN);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel titleLabel = new JLabel("SysCompMaster\u2122");
+        titleLabel.setFont(new Font("Segoe UI", Font.ITALIC, 24));
         titlePanel.add(titleLabel);
 
         JPanel menuPanel = new JPanel();
-        menuPanel.setBackground(Color.DARK_GRAY);
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
         contentPane.add(menuPanel, BorderLayout.WEST);
 
         JButton btnComponentes = new JButton("Componentes");
+        btnComponentes.setIcon(new ImageIcon(Principal.class.getResource("/img/motherboard_46935.png")));
         btnComponentes.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnComponentes.getMinimumSize().height));
-        btnComponentes.setForeground(Color.WHITE);
-        btnComponentes.setBackground(Color.BLACK);
         btnComponentes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegComponente regcomponente = new RegComponente(null);
@@ -116,9 +115,8 @@ public class Principal extends JFrame {
         menuPanel.add(btnComponentes);
 
         JButton btnListadoCompo = new JButton("Listado de Componentes");
+        btnListadoCompo.setIcon(new ImageIcon(Principal.class.getResource("/img/Folder_icon-icons.com_76516.png")));
         btnListadoCompo.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnListadoCompo.getMinimumSize().height));
-        btnListadoCompo.setForeground(Color.WHITE);
-        btnListadoCompo.setBackground(Color.BLACK);
         btnListadoCompo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListComponentes ventana = new ListComponentes();
@@ -129,9 +127,8 @@ public class Principal extends JFrame {
         menuPanel.add(btnListadoCompo);
 
         JButton btnFactura = new JButton("Factura");
+        btnFactura.setIcon(new ImageIcon(Principal.class.getResource("/img/credit_card_22167.png")));
         btnFactura.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnFactura.getMinimumSize().height));
-        btnFactura.setForeground(Color.WHITE);
-        btnFactura.setBackground(Color.BLACK);
         btnFactura.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegFactura regfactura = new RegFactura();
@@ -142,9 +139,8 @@ public class Principal extends JFrame {
         menuPanel.add(btnFactura);
 
         JButton btnListadoFacturas = new JButton("Listado de Facturas ");
+        btnListadoFacturas.setIcon(new ImageIcon(Principal.class.getResource("/img/invoice_22150.png")));
         btnListadoFacturas.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnListadoFacturas.getMinimumSize().height));
-        btnListadoFacturas.setForeground(Color.WHITE);
-        btnListadoFacturas.setBackground(Color.BLACK);
         btnListadoFacturas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -153,9 +149,8 @@ public class Principal extends JFrame {
         menuPanel.add(btnListadoFacturas);
 
         JButton btnCliente = new JButton("Clientes");
+        btnCliente.setIcon(new ImageIcon(Principal.class.getResource("/img/admin_user_man_22187.png")));
         btnCliente.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnCliente.getMinimumSize().height));
-        btnCliente.setForeground(Color.WHITE);
-        btnCliente.setBackground(Color.BLACK);
         btnCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegCliente regcliente = new RegCliente(null);
@@ -167,12 +162,13 @@ public class Principal extends JFrame {
         menuPanel.add(btnCliente);
 
         JButton btnListadoCliente = new JButton("Listado de Clientes");
+        btnListadoCliente.setIcon(new ImageIcon(Principal.class.getResource("/img/addressbook_104329.png")));
         btnListadoCliente.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnListadoCliente.getMinimumSize().height));
-        btnListadoCliente.setForeground(Color.WHITE);
-        btnListadoCliente.setBackground(Color.BLACK);
         btnListadoCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+            	ListClientes ventana = new ListClientes();
+            	ventana.setModal(true);
+            	ventana.setVisible(true);
             }
         });
         menuPanel.add(btnListadoCliente);

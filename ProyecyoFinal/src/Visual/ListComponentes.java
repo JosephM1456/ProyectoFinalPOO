@@ -294,7 +294,7 @@ public class ListComponentes extends JDialog {
 									
 									public void windowClosed(WindowEvent arg0)
 									{
-										System.out.println("windowClosed event triggered");
+										//System.out.println("windowClosed event triggered");
 										//panelLista.removeAll();
 										//loadComp(tipoSelect);
 										if(componentSelect instanceof PanelComponente)
