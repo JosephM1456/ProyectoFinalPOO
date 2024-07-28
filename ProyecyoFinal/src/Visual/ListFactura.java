@@ -9,11 +9,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Logico.Componente;
+import Logico.DiscoDuro;
 import Logico.Empresa;
 import Logico.Factura;
+import Logico.MicroProcesador;
+import Logico.RAM;
+import Logico.TarjetaMadre;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class ListFactura extends JDialog {
 
@@ -39,6 +48,7 @@ public class ListFactura extends JDialog {
 	 * Create the dialog.
 	 */
 	public ListFactura() {
+		setTitle("Lista de Facturas\r\n");
 		setBounds(100, 100, 1164, 710);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -55,7 +65,7 @@ public class ListFactura extends JDialog {
 				{
 					modelo = new DefaultTableModel();
 					table = new JTable();
-					String[] headers = {"Código","Nombre","Componentes","Precio Total"};
+					String[] headers = {"Código","Nombre","Componentes","Marcas","Precio Total"};
 					modelo.setColumnIdentifiers(headers);
 					table.setModel(modelo);
 					scrollPane.setViewportView(table);
@@ -68,6 +78,11 @@ public class ListFactura extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -75,17 +90,40 @@ public class ListFactura extends JDialog {
 		loadFacturas();
 	}
 	private void loadFacturas() {
-        modelo.setRowCount(0);
-        row = new Object[modelo.getColumnCount()];
-        
-        for (Factura factura : Empresa.getInstance().getLasFacturas()) {
-            row[0] = factura.getIdFactura();
-            row[1] = factura.getCliente().getNombre();
-            row[2] = factura.getLosComponentes().size();
-            row[3] = String.format("%.2f", factura.getCostoTotal());
-            
-            modelo.addRow(row);
-        }
-    }
+	    modelo.setRowCount(0);
+	    row = new Object[modelo.getColumnCount()];
+
+	    for (Factura factura : Empresa.getInstance().getLasFacturas()) {
+	        row[0] = factura.getIdFactura();
+	        row[1] = factura.getCliente().getNombre();
+	   
+	        List<String> tiposComponentes = new ArrayList<>();
+	        List<String> marcasComponentes = new ArrayList<>();
+	        for (Componente componente : factura.getLosComponentes()) {
+	            String tipo = getTipoComponente(componente);
+	            tiposComponentes.add(tipo);
+	            marcasComponentes.add(componente.getMarca());
+	        }
+	        
+	        row[2] = String.join(", ", tiposComponentes);
+	        row[3] = String.join(", ", marcasComponentes);
+	        row[4] = String.format("%.2f", factura.getCostoTotal());
+
+	        modelo.addRow(row);
+	    }
+	}
+
+	private String getTipoComponente(Componente componente) {
+	    if (componente instanceof TarjetaMadre) {
+	        return "Tarjeta Madre";
+	    } else if (componente instanceof RAM) {
+	        return "RAM";
+	    } else if (componente instanceof DiscoDuro) {
+	        return "Disco Duro";
+	    } else if (componente instanceof MicroProcesador) {
+	        return "Microprocesador";
+	    }
+	    return null;
+	}
 
 }

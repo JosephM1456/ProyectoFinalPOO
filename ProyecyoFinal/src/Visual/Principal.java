@@ -143,7 +143,9 @@ public class Principal extends JFrame {
         btnListadoFacturas.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnListadoFacturas.getMinimumSize().height));
         btnListadoFacturas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+            	ListFactura listfactura = new ListFactura();
+            	listfactura.setModal(true);
+            	listfactura.setVisible(true);
             }
         });
         menuPanel.add(btnListadoFacturas);

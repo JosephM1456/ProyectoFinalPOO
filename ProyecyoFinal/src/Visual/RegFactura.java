@@ -98,7 +98,21 @@ public class RegFactura extends JDialog {
 			            JOptionPane.showMessageDialog(null, "Por favor, ingrese una cédula.", "Error", JOptionPane.ERROR_MESSAGE);
 			            return;
 			        }
-			        cargarCliente(cedula);
+			        
+			        Cliente cliente = cargarCliente(cedula);
+			        if (cliente == null) {
+			            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con la cédula: " + cedula, "Error", JOptionPane.ERROR_MESSAGE);
+			            txtNombre.setEnabled(true);
+			            txtDireccion.setEnabled(true);
+			            txtTelefono.setEnabled(true);
+			            txtNombre.setText("");
+			            txtDireccion.setText("");
+			            txtTelefono.setText("");
+			        } else {
+			            txtNombre.setEnabled(false);
+			            txtDireccion.setEnabled(false);
+			            txtTelefono.setEnabled(false);
+			        }
 				}
 			});
 			btnBuscar1.setBounds(283, 12, 115, 29);
@@ -263,9 +277,21 @@ public class RegFactura extends JDialog {
 			
 			txtTelefono = new JTextField();
 			txtTelefono.setEnabled(false);
-			txtTelefono.setBounds(519, 52, 169, 26);
+			txtTelefono.setBounds(519, 52, 146, 26);
 			panel.add(txtTelefono);
 			txtTelefono.setColumns(10);
+			
+			JButton btnLimpiar = new JButton("Limpiar");
+			btnLimpiar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					txtCedula.setText("");
+				    txtNombre.setText("");
+				    txtDireccion.setText("");
+				    txtTelefono.setText("");
+				}
+			});
+			btnLimpiar.setBounds(680, 48, 124, 29);
+			panel.add(btnLimpiar);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -277,7 +303,7 @@ public class RegFactura extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
 				        float costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
-				        Cliente cliente = Empresa.getInstance().buscarClienteByCedula(txtCedula.getText());
+				        Cliente cliente = cargarCliente(txtCedula.getText());
 				     
 				        if (cliente != null) {
 				            Factura factura = new Factura(idFactura, costoTotal, new ArrayList<>(componentesCarrito), cliente);
@@ -342,26 +368,22 @@ public class RegFactura extends JDialog {
 	        btnFacturar.setEnabled(false);
 	    }
 	}
-	private void cargarCliente(String cedula) {
-		ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
-        boolean encontrado = false;
-        for (Cliente cliente : aux) {
-            if (cliente.getCedula().equals(cedula)) {
-            	txtNombre.setText(cliente.getNombre());
-                txtDireccion.setText(cliente.getDireccion());
-                txtTelefono.setText(cliente.getTelefono());
-                encontrado = true;
-            }
-            else if(!encontrado) {
-            	JOptionPane.showMessageDialog(this, "No se encontró ningún cliente con la cédula: " + cedula, "Error", JOptionPane.ERROR_MESSAGE);
-            	txtNombre.setEnabled(true);
-                txtDireccion.setEnabled(true);
-                txtTelefono.setEnabled(true);
-            	registrarNuevoCliente();
-            }
-        }
+	private Cliente cargarCliente(String cedula) {
+	    ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
+	    for (Cliente cliente : aux) {
+	        if (cliente.getCedula().equals(cedula)) {
+	            txtNombre.setText(cliente.getNombre());
+	            txtDireccion.setText(cliente.getDireccion());
+	            txtTelefono.setText(cliente.getTelefono());
+	            return cliente;
+	        }
+	    }
+	    txtNombre.setEnabled(true);
+	    txtDireccion.setEnabled(true);
+	    txtTelefono.setEnabled(true);
+	    return registrarNuevoCliente();
 	}
-	private void registrarNuevoCliente() {
+	private Cliente registrarNuevoCliente() {
 	    String cedula = txtCedula.getText();
 	    String nombre = txtNombre.getText();
 	    String direccion = txtDireccion.getText();
@@ -370,12 +392,13 @@ public class RegFactura extends JDialog {
 	    
 	    if (nombre.isEmpty() || direccion.isEmpty() || telefono.isEmpty()) {
 	        JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-	        return;
+	        return null;
 	    }
 	    
 	    Cliente nuevoCliente = new Visitante("CL-" + (Empresa.getIdCliente() + 1), direccion, telefono, cedula, nombre, cantcompras);
-	    Empresa.getInstance().insertarCliente(nuevoCliente);;
+	    Empresa.getInstance().insertarCliente(nuevoCliente);
 	    JOptionPane.showMessageDialog(this, "Nuevo cliente registrado con éxito.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+	    return nuevoCliente;
 	}
 	private void cargarComponenteTabla(String id) {
 		ArrayList<Componente> aux = Empresa.getInstance().getLosComponentes();
@@ -402,6 +425,7 @@ public class RegFactura extends JDialog {
 	    txtCedula.setText("");
 	    txtNombre.setText("");
 	    txtDireccion.setText("");
+	    txtTelefono.setText("");
 	    txtIdProducto.setText("C-");
 	    txtPrecioTotal.setText("0.0$");
 	    txtDescuento.setText("0.0$");
