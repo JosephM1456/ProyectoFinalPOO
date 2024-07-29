@@ -191,23 +191,22 @@ public class Principal extends JFrame {
         btnRespaldo.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnRespaldo.getMinimumSize().height));
         btnRespaldo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    sfd = new Socket("127.0.0.1", 7000);
-                    SalidaSocket = new ObjectOutputStream(new BufferedOutputStream(sfd.getOutputStream()));
-                    EntradaSocket = new ObjectInputStream(new BufferedInputStream(sfd.getInputStream()));
-
+            	try {
+                    Socket sfd = new Socket("localhost", 7000);
+                    ObjectOutputStream SalidaSocket = new ObjectOutputStream(sfd.getOutputStream());
+                    
                     Empresa empresa = Empresa.getInstance();
-                    try {
-                        SalidaSocket.writeObject(empresa);
-                        SalidaSocket.flush();
-                        JOptionPane.showMessageDialog(null, "Respaldo realizado con éxito.");
-                    } catch (IOException ioe) {
-                        JOptionPane.showMessageDialog(null, "Error al enviar el respaldo: " + ioe, "Error", JOptionPane.ERROR_MESSAGE);
-                    } 
+                    SalidaSocket.writeObject(empresa);
+                    SalidaSocket.flush();
+                    
+                    JOptionPane.showMessageDialog(null, "Respaldo enviado con éxito.");
+                    
+                    SalidaSocket.close();
+                    sfd.close();
                 } catch (UnknownHostException uhe) {
-                    JOptionPane.showMessageDialog(null, "No se puede acceder al servidor.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No se puede acceder al servidor: " + uhe.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IOException ioe) {
-                    JOptionPane.showMessageDialog(null, "Comunicación rechazada.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error de comunicación: " + ioe.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

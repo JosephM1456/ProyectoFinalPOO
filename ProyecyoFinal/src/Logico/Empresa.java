@@ -176,39 +176,52 @@ public class Empresa implements Serializable {
 	}
 	
 	public int countIdComponente() {
-		int countId = 0;
-		int countIdMax = 0;
-		for (int i = 0; i < LosComponentes.size();i++) {
-			countId = Integer.parseInt(LosComponentes.get(i).getIdComponente());
-			if(countIdMax < countId) {
-				countIdMax = countId;
-			}
-		}
-		countIdMax = countIdMax + 1;
-		return countIdMax;
+	    int countIdMax = 0;
+	    for (int i = 0; i < LosComponentes.size(); i++) {
+	        String idComponente = LosComponentes.get(i).getIdComponente();
+	        try {
+	            String numericPart = idComponente.replace("C-", "");
+	            int countId = Integer.parseInt(numericPart);
+	            if (countIdMax < countId) {
+	                countIdMax = countId;
+	            }
+	        } catch (NumberFormatException e) {
+	            System.out.println("ID de componente inválido: " + idComponente);
+	        }
+	    }
+	    return countIdMax + 1;
 	}
+
 	public int countIdCliente() {
-		int countId = 0;
-		int countIdMax = 0;
-		for (int i = 0; i < LosClientes.size();i++) {
-			countId = Integer.parseInt(LosClientes.get(i).getIdCliente());
-			if(countIdMax < countId) {
-				countIdMax = countId;
-			}
-		}
-		countIdMax = countIdMax + 1;
-		return countIdMax;
+	    int countIdMax = 0;
+	    for (int i = 0; i < LosClientes.size(); i++) {
+	        String idCliente = LosClientes.get(i).getIdCliente();
+	        try {
+	            String numericPart = idCliente.replace("CL-", "");
+	            int countId = Integer.parseInt(numericPart);
+	            if (countIdMax < countId) {
+	                countIdMax = countId;
+	            }
+	        } catch (NumberFormatException e) {
+	            System.out.println("ID de cliente inválido: " + idCliente);
+	        }
+	    }
+	    return countIdMax + 1;
 	}
 	public int countIdFactura() {
-		int countId = 0;
-		int countIdMax = 0;
-		for (int i = 0; i < LasFacturas.size();i++) {
-			countId = Integer.parseInt(LasFacturas.get(i).getIdFactura());
-			if(countIdMax < countId) {
-				countIdMax = countId;
-			}
-		}
-		countIdMax = countIdMax + 1;
-		return countIdMax;
+	    int countIdMax = 0;
+	    for (int i = 0; i < LasFacturas.size(); i++) {
+	        String idFactura = LasFacturas.get(i).getIdFactura();
+	        try {
+	            String numericPart = idFactura.replace("F-", "");
+	            int countId = Integer.parseInt(numericPart);
+	            if (countIdMax < countId) {
+	                countIdMax = countId;
+	            }
+	        } catch (NumberFormatException e) {
+	            System.out.println("ID de factura inválido: " + idFactura);
+	        }
+	    }
+	    return countIdMax + 1;
 	}
 }
