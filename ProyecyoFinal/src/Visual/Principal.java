@@ -8,7 +8,14 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,6 +41,10 @@ public class Principal extends JFrame {
     private Dimension dim;
     private JPanel panel_1;
     private GridBagConstraints constr = new GridBagConstraints();
+    
+    static Socket sfd = null;
+    static ObjectInputStream EntradaSocket;
+    static ObjectOutputStream SalidaSocket;
 
 
 
@@ -174,6 +185,33 @@ public class Principal extends JFrame {
             }
         });
         menuPanel.add(btnListadoCliente);
+        
+        JButton btnRespaldo = new JButton("Respaldo");
+ 
+        btnRespaldo.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnRespaldo.getMinimumSize().height));
+        btnRespaldo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    sfd = new Socket("127.0.0.1", 7000);
+                    SalidaSocket = new ObjectOutputStream(new BufferedOutputStream(sfd.getOutputStream()));
+                    EntradaSocket = new ObjectInputStream(new BufferedInputStream(sfd.getInputStream()));
+
+                    Empresa empresa = Empresa.getInstance();
+                    try {
+                        SalidaSocket.writeObject(empresa);
+                        SalidaSocket.flush();
+                        JOptionPane.showMessageDialog(null, "Respaldo realizado con éxito.");
+                    } catch (IOException ioe) {
+                        JOptionPane.showMessageDialog(null, "Error al enviar el respaldo: " + ioe, "Error", JOptionPane.ERROR_MESSAGE);
+                    } 
+                } catch (UnknownHostException uhe) {
+                    JOptionPane.showMessageDialog(null, "No se puede acceder al servidor.", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IOException ioe) {
+                    JOptionPane.showMessageDialog(null, "Comunicación rechazada.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        menuPanel.add(btnRespaldo);
 
         constr.gridheight = 100;
         constr.gridwidth = 75;

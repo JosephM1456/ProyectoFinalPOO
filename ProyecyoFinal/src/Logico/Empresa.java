@@ -177,26 +177,38 @@ public class Empresa implements Serializable {
 	
 	public int countIdComponente() {
 		int countId = 0;
+		int countIdMax = 0;
 		for (int i = 0; i < LosComponentes.size();i++) {
-			countId++;
+			countId = Integer.parseInt(LosComponentes.get(i).getIdComponente());
+			if(countIdMax < countId) {
+				countIdMax = countId;
+			}
 		}
-		countId = countId + 1;
-		return countId;
+		countIdMax = countIdMax + 1;
+		return countIdMax;
 	}
 	public int countIdCliente() {
 		int countId = 0;
+		int countIdMax = 0;
 		for (int i = 0; i < LosClientes.size();i++) {
-			countId++;
+			countId = Integer.parseInt(LosClientes.get(i).getIdCliente());
+			if(countIdMax < countId) {
+				countIdMax = countId;
+			}
 		}
-		countId = countId + 1;
-		return countId;
+		countIdMax = countIdMax + 1;
+		return countIdMax;
 	}
 	public int countIdFactura() {
 		int countId = 0;
+		int countIdMax = 0;
 		for (int i = 0; i < LasFacturas.size();i++) {
-			countId++;
+			countId = Integer.parseInt(LasFacturas.get(i).getIdFactura());
+			if(countIdMax < countId) {
+				countIdMax = countId;
+			}
 		}
-		countId = countId + 1;
-		return countId;
+		countIdMax = countIdMax + 1;
+		return countIdMax;
 	}
 }
