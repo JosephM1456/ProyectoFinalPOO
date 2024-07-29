@@ -3,7 +3,7 @@ import java.io.*;
 import java.net.*;
 import Logico.Empresa;
 
-public class Servidor {
+public class Servidor extends Thread{
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		try {
@@ -20,7 +20,7 @@ public class Servidor {
 
 					try {
 						Empresa empresa = (Empresa) inputStream.readObject();
-						System.out.println("Empresa recibida: " + empresa.countIdComponente());                        
+						System.out.println("Empresa recibida");                        
 					} catch (ClassNotFoundException e) {
 						System.out.println("Error al leer el objeto: " + e.getMessage());
 					}
