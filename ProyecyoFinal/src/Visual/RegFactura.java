@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Logico.Cliente;
 import Logico.Componente;
+import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Factura;
 import Logico.Visitante;
@@ -99,19 +100,14 @@ public class RegFactura extends JDialog {
 			            return;
 			        }
 			        
-			        Cliente cliente = cargarCliente(cedula);
+			        Cliente cliente = buscarCliente(cedula);
 			        if (cliente == null) {
 			            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con la cédula: " + cedula, "Error", JOptionPane.ERROR_MESSAGE);
-			            txtNombre.setEnabled(true);
-			            txtDireccion.setEnabled(true);
-			            txtTelefono.setEnabled(true);
-			            txtNombre.setText("");
-			            txtDireccion.setText("");
-			            txtTelefono.setText("");
+			            limpiarCamposCliente();
+			            habilitarCamposCliente(true);
 			        } else {
-			            txtNombre.setEnabled(false);
-			            txtDireccion.setEnabled(false);
-			            txtTelefono.setEnabled(false);
+			            mostrarDatosCliente(cliente);
+			            habilitarCamposCliente(false);
 			        }
 				}
 			});
@@ -284,10 +280,7 @@ public class RegFactura extends JDialog {
 			JButton btnLimpiar = new JButton("Limpiar");
 			btnLimpiar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					txtCedula.setText("");
-				    txtNombre.setText("");
-				    txtDireccion.setText("");
-				    txtTelefono.setText("");
+					clean();
 				}
 			});
 			btnLimpiar.setBounds(680, 48, 124, 29);
@@ -302,10 +295,15 @@ public class RegFactura extends JDialog {
 				btnFacturar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
-				        float costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
+				        float costoTotal = 0;
 				        Cliente cliente = cargarCliente(txtCedula.getText());
 				     
 				        if (cliente != null) {
+				        	if(calcularDescuento(cliente) == 0) {
+				        		costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
+				        	}else {
+				        		costoTotal = calcularDescuento(cliente);
+				        	}
 				            Factura factura = new Factura(idFactura, costoTotal, new ArrayList<>(componentesCarrito), cliente);
 				            Empresa.getInstance().getLasFacturas().add(factura);
 				            JOptionPane.showMessageDialog(null, "Factura generada con éxito!", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -347,7 +345,7 @@ public class RegFactura extends JDialog {
         }
     }
 	public void carritoUpload() {
-	    float precioTotal = 0;
+		float precioTotal = 0;
 	    modelo1.setRowCount(0);
 	    cartRow = new Object[table_1.getColumnCount()];
 	    
@@ -362,6 +360,14 @@ public class RegFactura extends JDialog {
 	    }
 	    
 	    txtPrecioTotal.setText(String.format("%.2f$", precioTotal));
+	    Cliente clienteActual = buscarCliente(txtCedula.getText());
+	    if (clienteActual != null) {
+	        float descuento = calcularDescuento(clienteActual);
+	        txtDescuento.setText(String.format("%.2f$", descuento));
+	    } else {
+	        txtDescuento.setText("0.00$");
+	    }
+
 	    if(precioTotal != 0.0) {
 	        btnFacturar.setEnabled(true);
 	    } else {
@@ -372,9 +378,7 @@ public class RegFactura extends JDialog {
 	    ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
 	    for (Cliente cliente : aux) {
 	        if (cliente.getCedula().equals(cedula)) {
-	            txtNombre.setText(cliente.getNombre());
-	            txtDireccion.setText(cliente.getDireccion());
-	            txtTelefono.setText(cliente.getTelefono());
+	        	mostrarDatosCliente(cliente);
 	            return cliente;
 	        }
 	    }
@@ -420,6 +424,75 @@ public class RegFactura extends JDialog {
             	loadComponentes();
             }
         }
+	}
+	private Cliente buscarCliente(String cedula) {
+	    ArrayList<Cliente> aux = Empresa.getInstance().getLosClientes();
+	    for (Cliente cliente : aux) {
+	        if (cliente.getCedula().equals(cedula)) {
+	            return cliente;
+	        }
+	    }
+	    return null;
+	}
+
+	private void limpiarCamposCliente() {
+	    txtNombre.setText("");
+	    txtDireccion.setText("");
+	    txtTelefono.setText("");
+	}
+
+	private void habilitarCamposCliente(boolean habilitar) {
+	    txtNombre.setEnabled(habilitar);
+	    txtDireccion.setEnabled(habilitar);
+	    txtTelefono.setEnabled(habilitar);
+	}
+
+	private void mostrarDatosCliente(Cliente cliente) {
+	    txtNombre.setText(cliente.getNombre());
+	    txtDireccion.setText(cliente.getDireccion());
+	    txtTelefono.setText(cliente.getTelefono());
+	}
+	private float calcularPrecioTotal() {
+        float total = 0;
+        for (Componente componente : componentesCarrito) {
+            total += componente.getPrecio();
+        }
+        return total;
+    }
+	private float calcularDescuento(Cliente cliente) {
+	    float descuentoPorAnios = 0;
+	    float descuentoPorMarca = 0;
+	    float precioTotal = calcularPrecioTotal();
+
+	    if (cliente instanceof Empleado) {
+	        Empleado empleado = (Empleado) cliente;
+	        if (empleado.getCantAniosTrabajando() == 1) {
+	            descuentoPorAnios = (float)(precioTotal - precioTotal * 0.05);
+	        } else if (empleado.getCantAniosTrabajando() == 2) {
+	            descuentoPorAnios = (float)(precioTotal - precioTotal * 0.10);
+	        } else if (empleado.getCantAniosTrabajando() >= 3) {
+	            descuentoPorAnios = (float)(precioTotal - precioTotal * 0.15);
+	        }
+	    }
+	    for (int i = 0; i < componentesCarrito.size(); i++) {
+	        int cont = 1;
+	        for (int j = i + 1; j < componentesCarrito.size(); j++) {
+	            if (componentesCarrito.get(i).getMarca().equals(componentesCarrito.get(j).getMarca())) {
+	                cont++;
+	            }
+	        }
+	        if (cliente instanceof Empleado && cont >= 2) {
+	            descuentoPorMarca = (float)(precioTotal * 0.05);
+	        }else if (cliente instanceof Visitante && cont >= 2) {
+	        	descuentoPorMarca = (float)(precioTotal - precioTotal * 0.05);
+	        }
+	    }
+	    if(descuentoPorAnios == 0) {
+	    	return descuentoPorMarca;
+	    }
+	    else {
+	    	return descuentoPorAnios - descuentoPorMarca;
+	    }
 	}
 	private void clean() {
 	    txtCedula.setText("");
