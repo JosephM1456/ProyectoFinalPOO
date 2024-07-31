@@ -408,6 +408,7 @@ public class Principal extends JFrame {
     
     private void generarGraficaModa()
     {
+    	if(Empresa.getInstance().getLosComponentes().size() > 0) {
     	ArrayList<Componente>listaComp = new ArrayList<Componente>();
     	ArrayList<Double>listaCompCant = new ArrayList<Double>();
     	ArrayList<Factura>listafacturas = Empresa.getInstance().getLasFacturas();
@@ -459,6 +460,7 @@ public class Principal extends JFrame {
     	panelGrafica.setForeground(getForeground());
     	//panelGrafica.setFont(titleLabel.getFont());
     	panelGrafica2.add(panelGrafica);
+    	}
     	
     }
     
