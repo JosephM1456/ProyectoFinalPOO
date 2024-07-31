@@ -133,7 +133,7 @@ public class ListClientes extends JDialog {
 					idSelect = ((PanelCliente)clienteSelect).getCliente().getIdCliente();
 					btnActualizar.setEnabled(true);
 					btnEliminar.setEnabled(true);
-					((JComponent) clienteSelect).setBorder(new LineBorder(new Color(0, 255, 0), 2));
+					((JComponent) clienteSelect).setBorder(new LineBorder(new Color(155, 155, 200), 2));
 				}
 				
 			}

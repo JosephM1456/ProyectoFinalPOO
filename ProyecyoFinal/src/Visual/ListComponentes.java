@@ -219,7 +219,7 @@ public class ListComponentes extends JDialog {
 							//System.out.println(((PanelComponente)componentSelect).getComp().getIdComponente()+"\t"+((PanelComponente)componentSelect).getComp().getModelo()+"\t"+((PanelComponente)componentSelect).getComp().getPrecio());
 							btnEliminar.setEnabled(true);
 							btnActualizar.setEnabled(true);
-							((JComponent) componentSelect).setBorder(new LineBorder(new Color(0, 255, 0), 2));
+							((JComponent) componentSelect).setBorder(new LineBorder(new Color(155, 155, 200), 2));
 						}
 					}
 				}

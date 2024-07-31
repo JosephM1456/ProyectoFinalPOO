@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -25,14 +26,28 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import Logico.ArchivoEmpresa;
+import Logico.Componente;
+import Logico.DiscoDuro;
 import Logico.Empresa;
+import Logico.Factura;
+import Logico.MicroProcesador;
+import Logico.RAM;
+import Logico.TarjetaMadre;
+
 import java.awt.GridBagConstraints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
+import javax.swing.SwingConstants;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import java.awt.SystemColor;
 
 
 public class Principal extends JFrame {
@@ -45,6 +60,11 @@ public class Principal extends JFrame {
     static Socket sfd = null;
     static ObjectInputStream EntradaSocket;
     static ObjectOutputStream SalidaSocket;
+    private JPanel panelSaludo;
+    private JLabel lblBienvenido;
+    private JLabel lblDatos;
+    private JPanel panelGrafica1;
+    private JPanel panelGrafica2;
 
 
 
@@ -119,6 +139,15 @@ public class Principal extends JFrame {
         btnComponentes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegComponente regcomponente = new RegComponente(null);
+                regcomponente.addWindowListener(new WindowAdapter() {
+                	public void windowClosed(WindowEvent e)
+                	{
+                        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        lblDatos.revalidate();
+                        lblDatos.repaint();
+                	}
+                });
                 regcomponente.setModal(true);
                 regcomponente.setVisible(true);
             }
@@ -131,6 +160,15 @@ public class Principal extends JFrame {
         btnListadoCompo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListComponentes ventana = new ListComponentes();
+                ventana.addWindowListener(new WindowAdapter() {
+                	public void windowClosed(WindowEvent e)
+                	{
+                        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        lblDatos.revalidate();
+                        lblDatos.repaint();
+                	}
+                });
                 ventana.setModal(true);
                 ventana.setVisible(true);
             }
@@ -143,6 +181,15 @@ public class Principal extends JFrame {
         btnFactura.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegFactura regfactura = new RegFactura();
+                regfactura.addWindowListener(new WindowAdapter() {
+                	public void windowClosed(WindowEvent e)
+                	{
+                        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        lblDatos.revalidate();
+                        lblDatos.repaint();
+                	}
+                });
                 regfactura.setModal(true);
                 regfactura.setVisible(true);
             }
@@ -167,6 +214,15 @@ public class Principal extends JFrame {
         btnCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegCliente regcliente = new RegCliente(null);
+                regcliente.addWindowListener(new WindowAdapter() {
+                	public void windowClosed(WindowEvent e)
+                	{
+                        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        lblDatos.revalidate();
+                        lblDatos.repaint();
+                	}
+                });
                 regcliente.setModal(true);
                 regcliente.setVisible(true);
 
@@ -180,6 +236,15 @@ public class Principal extends JFrame {
         btnListadoCliente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	ListClientes ventana = new ListClientes();
+            	ventana.addWindowListener(new WindowAdapter() {
+                	public void windowClosed(WindowEvent e)
+                	{
+                        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        lblDatos.revalidate();
+                        lblDatos.repaint();
+                	}
+                });
             	ventana.setModal(true);
             	ventana.setVisible(true);
             }
@@ -187,6 +252,7 @@ public class Principal extends JFrame {
         menuPanel.add(btnListadoCliente);
         
         JButton btnRespaldo = new JButton("Respaldo");
+        btnRespaldo.setIcon(new ImageIcon(Principal.class.getResource("/img/backup.png")));
  
         btnRespaldo.setMaximumSize(new Dimension(Integer.MAX_VALUE, btnRespaldo.getMinimumSize().height));
         btnRespaldo.addActionListener(new ActionListener() {
@@ -230,9 +296,41 @@ public class Principal extends JFrame {
         panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 255, 0)));
         contentPane.add(panel_1, BorderLayout.CENTER);
         panel_1.setLayout(null);
+        
+        panelSaludo = new JPanel();
+        panelSaludo.setBounds(177, 39, 945, 162);
+        panel_1.add(panelSaludo);
+        panelSaludo.setLayout(null);
+        
+        lblBienvenido = new JLabel("Bienvenido al sistema SysCompMaster");
+        lblBienvenido.setHorizontalAlignment(SwingConstants.CENTER);
+        lblBienvenido.setFont(new Font("Segoe UI Light", Font.BOLD, 20));
+        lblBienvenido.setBounds(283, 16, 378, 54);
+        panelSaludo.add(lblBienvenido);
+        
+        lblDatos = new JLabel("New label");
+        lblDatos.setHorizontalAlignment(SwingConstants.CENTER);
+        lblDatos.setBounds(204, 102, 537, 20);
+        panelSaludo.add(lblDatos);
 
         cargarEmpresa();
-
+        lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
+        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+        
+        JLabel lblEstadistica = new JLabel("Estad\u00EDsticas:");
+        lblEstadistica.setFont(new Font("Segoe UI Light", Font.BOLD, 16));
+        lblEstadistica.setBounds(25, 309, 91, 20);
+        panel_1.add(lblEstadistica);
+        
+        panelGrafica1 = new JPanel();
+        panelGrafica1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 255, 0)));
+        panelGrafica1.setBounds(25, 345, 529, 378);
+        panel_1.add(panelGrafica1);
+        
+        panelGrafica2 = new JPanel();
+        panelGrafica2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 255, 0)));
+        panelGrafica2.setBounds(627, 345, 529, 378);
+        panel_1.add(panelGrafica2);
    
         addWindowListener(new WindowAdapter() {
             @Override
@@ -240,6 +338,8 @@ public class Principal extends JFrame {
                 guardarEmpresa();
             }
         });
+        generarGrafica();
+        generarGraficaModa();
     }
 
     private void cargarEmpresa() {
@@ -256,5 +356,147 @@ public class Principal extends JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error al guardar los datos", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    private void generarGrafica()
+    {
+    	ArrayList<Componente>listaComp = Empresa.getInstance().getLosComponentes();
+    	Double cantDiscoDuro = 0.0;
+    	Double cantMicroChip = 0.0;
+    	Double cantRam = 0.0;
+    	Double cantTarjetaMadre = 0.0;
+    	
+    	for(Componente ind : listaComp)
+    	{
+    		if(ind instanceof DiscoDuro)
+    		{
+    			cantDiscoDuro++;
+    		}
+    		else if(ind instanceof MicroProcesador)
+    		{
+    			cantMicroChip++;
+    		}
+    		else if(ind instanceof RAM)
+    		{
+    			cantRam++;
+    		}
+    		else if(ind instanceof TarjetaMadre)
+    		{
+    			cantTarjetaMadre++;
+    		}
+    	}
+    	
+    	DefaultPieDataset data = new DefaultPieDataset();
+    	data.setValue("Disco Duro", ((cantDiscoDuro/listaComp.size())*100) );
+    	data.setValue("Micro Procesador", (cantMicroChip/listaComp.size())*100 );
+    	data.setValue("RAM", (cantRam/listaComp.size())*100 );
+    	data.setValue("Tarjeta Madre", (cantTarjetaMadre/listaComp.size())*100 );
+    	
+    	JFreeChart chart = ChartFactory.createPieChart("Proporciones del listado de Componentes"
+    			, data, true, true, false);
+    	
+    	ChartPanel panelGrafica = new ChartPanel(chart);
+    	panelGrafica.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+    	panelGrafica.setPreferredSize(new Dimension(panelGrafica1.getWidth()-30, panelGrafica1.getHeight()-20));
+    	panelGrafica.setBackground(getBackground());
+    	panelGrafica.setForeground(getForeground());
+    	//panelGrafica.setFont(titleLabel.getFont());
+    	panelGrafica1.add(panelGrafica);
+    	
+    	
+    }
+    
+    private void generarGraficaModa()
+    {
+    	ArrayList<Componente>listaComp = new ArrayList<Componente>();
+    	ArrayList<Double>listaCompCant = new ArrayList<Double>();
+    	ArrayList<Factura>listafacturas = Empresa.getInstance().getLasFacturas();
+    	Double restoVentas = new Double(0.0);
+    	
+    	for(int i = 0; i < Empresa.getInstance().getLosComponentes().size(); i++)
+    	{
+    		listaCompCant.add(0.0);
+    		listaComp.add(Empresa.getInstance().getLosComponentes().get(i));
+    	}
+    	
+    	System.out.println(listaComp.size());
+    	
+    	for(Factura indFact : listafacturas)
+    	{
+    		for(Componente ind : indFact.getLosComponentes())
+    		{
+    			int index = listaComp.indexOf(ind);
+    			listaCompCant.set(index, listaCompCant.get(index)+1);
+    		}
+    	}
+    	
+    	
+    	quickSort(listaCompCant, listaComp, 0, listaComp.size()-1);
+    	
+    	
+    	if(listaComp.size() > 4)
+    	{
+    		for(int ind = 0; ind < listaComp.size()-5; ind++)
+    		{
+    			restoVentas += listaCompCant.get(ind);
+    		}
+    	}
+    	
+    	DefaultPieDataset data = new DefaultPieDataset();
+    	data.setValue(listaComp.get(listaComp.size()-1).getModelo(), (listaCompCant.get(0)/listaComp.size())*100);
+    	data.setValue(listaComp.get(listaComp.size()-2).getModelo(), (listaCompCant.get(1)/listaComp.size())*100);
+    	data.setValue(listaComp.get(listaComp.size()-3).getModelo(), (listaCompCant.get(2)/listaComp.size())*100);
+    	data.setValue(listaComp.get(listaComp.size()-4).getModelo(), (listaCompCant.get(3)/listaComp.size())*100);
+    	data.setValue("Otros componentes", (restoVentas/listaComp.size())*100);
+    	
+    	JFreeChart chart = ChartFactory.createPieChart("Componentes mas vendidos"
+    			, data, true, true, false);
+    	
+    	ChartPanel panelGrafica = new ChartPanel(chart);
+    	panelGrafica.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+    	panelGrafica.setPreferredSize(new Dimension(panelGrafica1.getWidth()-30, panelGrafica1.getHeight()-20));
+    	panelGrafica.setBackground(getBackground());
+    	panelGrafica.setForeground(getForeground());
+    	//panelGrafica.setFont(titleLabel.getFont());
+    	panelGrafica2.add(panelGrafica);
+    	
+    }
+    
+    public void quickSort(ArrayList<Double> arr, ArrayList<Componente>lista, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, lista, begin, end);
+
+            quickSort(arr, lista, begin, partitionIndex-1);
+            quickSort(arr, lista, partitionIndex+1, end);
+        }
+    }
+
+    private int partition(ArrayList<Double> arr, ArrayList<Componente>lista, int begin, int end) {
+        double pivot = arr.get(end);
+        int i = (begin-1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr.get(j) <= pivot) {
+                i++;
+
+                Componente swapComp = lista.get(i);
+                lista.set(i, lista.get(j));
+                lista.set(j, swapComp);
+                
+                double swapTemp = arr.get(i);
+                arr.set(i, arr.get(j));
+                arr.set(j, swapTemp);
+            }
+        }
+
+        Componente swapComp = lista.get(i+1);
+        lista.set(i+1, lista.get(end));
+        lista.set(end, swapComp);
+        
+        double swapTemp = arr.get(i+1);
+        arr.set(i+1, arr.get(end));
+        arr.set(end, swapTemp);
+
+        return i+1;
     }
 }
