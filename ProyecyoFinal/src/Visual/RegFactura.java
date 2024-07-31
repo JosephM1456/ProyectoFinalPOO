@@ -419,10 +419,10 @@ public class RegFactura extends JDialog {
             	modelo.addRow(dispRow);
                 encontrado = true;
             }
-            else if(!encontrado) {
-            	JOptionPane.showMessageDialog(this, "No se encontró ningún componente con el ID: " + id, "Componente no encontrado", JOptionPane.INFORMATION_MESSAGE);
-            	loadComponentes();
-            }
+        }
+        if(!encontrado) {
+        	JOptionPane.showMessageDialog(this, "No se encontró ningún componente con el ID: " + id, "Componente no encontrado", JOptionPane.INFORMATION_MESSAGE);
+        	loadComponentes();
         }
 	}
 	private Cliente buscarCliente(String cedula) {
