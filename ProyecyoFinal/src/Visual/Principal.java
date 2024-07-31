@@ -143,7 +143,7 @@ public class Principal extends JFrame {
                 	public void windowClosed(WindowEvent e)
                 	{
                         lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
-                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
                         lblDatos.revalidate();
                         lblDatos.repaint();
                 	}
@@ -164,7 +164,7 @@ public class Principal extends JFrame {
                 	public void windowClosed(WindowEvent e)
                 	{
                         lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
-                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
                         lblDatos.revalidate();
                         lblDatos.repaint();
                 	}
@@ -185,7 +185,7 @@ public class Principal extends JFrame {
                 	public void windowClosed(WindowEvent e)
                 	{
                         lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
-                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
                         lblDatos.revalidate();
                         lblDatos.repaint();
                 	}
@@ -218,7 +218,7 @@ public class Principal extends JFrame {
                 	public void windowClosed(WindowEvent e)
                 	{
                         lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
-                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
                         lblDatos.revalidate();
                         lblDatos.repaint();
                 	}
@@ -240,7 +240,7 @@ public class Principal extends JFrame {
                 	public void windowClosed(WindowEvent e)
                 	{
                         lblDatos.setText("Se tiene registrado "+Empresa.getInstance().getLosClientes().size()+" Cliente(s), "+Empresa.getInstance().getLosComponentes().size()
-                        		+"Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
+                        		+" Componente(s) y "+Empresa.getInstance().getLasFacturas().size()+" Facturas");
                         lblDatos.revalidate();
                         lblDatos.repaint();
                 	}
