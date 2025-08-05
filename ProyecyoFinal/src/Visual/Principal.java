@@ -555,27 +555,27 @@ public class Principal extends JFrame {
 	//        }
 	//    }
 
-	private void guardarFacturasEnBD() {
-	    String user = "sa";
-	    String password = "sa123";
-	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
-	            "databaseName=TiendaComponentes;" +
-	            "user=" + user + ";" +
-	            "password=" + password + ";" +
-	            "encrypt=false;" +
-	            "trustServerCertificate=true;";
-	    
-	    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
-	        ConexionBD conexionBD = new ConexionBD();
-	        conexionBD.guardarFacturasEnBD(connection);
-	        
-	        System.out.println("Facturas del archivo guardadas en BD exitosamente.");
-	        
-	    } catch (SQLException e) {
-	        System.out.println("Error al guardar facturas en BD: " + e.getMessage());
-	        e.printStackTrace();
-	    }
-	}
+//	private void guardarFacturasEnBD() {
+//	    String user = "sa";
+//	    String password = "sa123";
+//	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+//	            "databaseName=TiendaComponentes;" +
+//	            "user=" + user + ";" +
+//	            "password=" + password + ";" +
+//	            "encrypt=false;" +
+//	            "trustServerCertificate=true;";
+//	    
+//	    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+//	        ConexionBD conexionBD = new ConexionBD();
+//	        conexionBD.guardarFacturasEnBD(connection);
+//	        
+//	        System.out.println("Facturas del archivo guardadas en BD exitosamente.");
+//	        
+//	    } catch (SQLException e) {
+//	        System.out.println("Error al guardar facturas en BD: " + e.getMessage());
+//	        e.printStackTrace();
+//	    }
+//	}
 
 	private void cargarEmpresaDesdeBD() {
 	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
