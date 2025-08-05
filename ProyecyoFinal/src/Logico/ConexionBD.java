@@ -282,31 +282,48 @@ public class ConexionBD {
 		return rs.getInt(1) > 0;
 	}
 	public void insertarFactura(Connection conn, Factura factura) throws SQLException {
-		// 1. Insertar la factura principal
-		String sqlFactura = "INSERT INTO Factura (id_factura, id_cliente, costo_total) VALUES (?, ?, ?)";
-		PreparedStatement pstmtFactura = conn.prepareStatement(sqlFactura);
+	    // 1. Insertar la factura principal
+	    String sqlFactura = "INSERT INTO Factura (id_factura, id_cliente, costo_total) VALUES (?, ?, ?)";
+	    PreparedStatement pstmtFactura = conn.prepareStatement(sqlFactura);
 
-		pstmtFactura.setString(1, factura.getIdFactura());
-		pstmtFactura.setString(2, factura.getCliente().getIdCliente());
-		pstmtFactura.setDouble(3, factura.getCostoTotal());
+	    pstmtFactura.setString(1, factura.getIdFactura());
+	    pstmtFactura.setString(2, factura.getCliente().getIdCliente());
+	    pstmtFactura.setDouble(3, factura.getCostoTotal());
 
-		pstmtFactura.executeUpdate();
-		System.out.println("Factura insertada: " + factura.getIdFactura());
+	    pstmtFactura.executeUpdate();
+	    System.out.println("Factura insertada: " + factura.getIdFactura());
 
-		// 2. Insertar los componentes de la factura en detalle_factura
-		if (factura.getLosComponentes() != null && !factura.getLosComponentes().isEmpty()) {
-			String sqlComponentes = "INSERT INTO detalle_factura (id_factura, id_componente) VALUES (?, ?)";
-			PreparedStatement pstmtComponentes = conn.prepareStatement(sqlComponentes);
+	    // 2. Insertar los componentes de la factura en detalle_factura
+	    if (factura.getLosComponentes() != null && !factura.getLosComponentes().isEmpty()) {
+	        // CORREGIDO: Incluir la columna cantidad
+	        String sqlComponentes = "INSERT INTO detalle_factura (id_factura, id_componente, cantidad) VALUES (?, ?, ?)";
+	        PreparedStatement pstmtComponentes = conn.prepareStatement(sqlComponentes);
 
-			for (Componente componente : factura.getLosComponentes()) {
-				pstmtComponentes.setString(1, factura.getIdFactura());
-				pstmtComponentes.setString(2, componente.getIdComponente());
-				pstmtComponentes.executeUpdate();
-			}
+	        // Contar las cantidades de cada componente
+	        HashMap<String, Integer> componenteCantidades = new HashMap<>();
+	        
+	        // Contar cuántas veces aparece cada componente
+	        for (Componente componente : factura.getLosComponentes()) {
+	            String idComponente = componente.getIdComponente();
+	            componenteCantidades.put(idComponente, 
+	                    componenteCantidades.getOrDefault(idComponente, 0) + 1);
+	        }
 
-			System.out.println("Se insertaron " + factura.getLosComponentes().size() + 
-					" componentes para la factura: " + factura.getIdFactura());
-		}
+	        // Insertar cada componente único con su cantidad total
+	        for (Map.Entry<String, Integer> entry : componenteCantidades.entrySet()) {
+	            pstmtComponentes.setString(1, factura.getIdFactura());
+	            pstmtComponentes.setString(2, entry.getKey());
+	            pstmtComponentes.setInt(3, entry.getValue()); // ESTE ES EL PARÁMETRO 3 QUE FALTABA
+	            pstmtComponentes.executeUpdate();
+	            
+	            System.out.println("Componente " + entry.getKey() + 
+	                    " - Cantidad: " + entry.getValue() + 
+	                    " agregado a factura: " + factura.getIdFactura());
+	        }
+
+	        System.out.println("Se insertaron " + componenteCantidades.size() + 
+	                " tipos de componentes para la factura: " + factura.getIdFactura());
+	    }
 	}
 
 	// Método para verificar si una factura existe en la BD
@@ -570,25 +587,7 @@ public class ConexionBD {
 					cargarComponentesDeFactura(connection, factura);
 
 					// VERIFICACIÓN: Comparar total calculado vs BD
-					double totalCalculado;
-
-					if (cliente instanceof Empleado) {
-					    Empleado empleado = (Empleado) cliente;
-					    totalCalculado = factura.getCostoTotal() * (1 - (double) empleado.getDescuento() / 100);;
-					} else {
-					    totalCalculado = factura.getCostoTotal();
-					}
-					if (Math.abs(totalCalculado - costoTotalBD) > 0.01) {
-						System.out.println("ADVERTENCIA: Discrepancia en factura " + idFactura);
-						System.out.println("  Total en BD: " + costoTotalBD);
-						System.out.println("  Total calculado: " + totalCalculado);
-
-						// Opción 1: Usar el total de la BD
-						// factura.setCostoTotal(costoTotalBD);
-
-						// Opción 2: Recalcular (recomendado)
-						System.out.println("  Usando total recalculado: " + totalCalculado);
-					}
+					
 
 					facturas.add(factura);
 				} else {

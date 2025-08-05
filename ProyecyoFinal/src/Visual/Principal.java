@@ -631,16 +631,16 @@ public class Principal extends JFrame {
 	        ex.printStackTrace();
 	        
 	        // En caso de error, intentar cargar desde archivo como respaldo
-	        System.out.println("Intentando cargar desde archivo como respaldo...");
-	        try {
-	            ArchivoEmpresa.getInstance().cargarEmpresa("empresa.txt");
-	            System.out.println("Datos cargados desde archivo de respaldo exitosamente.");
-	        } catch (IOException | ClassNotFoundException ex2) {
-	            JOptionPane.showMessageDialog(null, 
-	                "Error crítico: No se pudieron cargar datos ni desde BD ni desde archivo.", 
-	                "Error Fatal", 
-	                JOptionPane.ERROR_MESSAGE);
-	        }
+//	        System.out.println("Intentando cargar desde archivo como respaldo...");
+//	        try {
+//	            ArchivoEmpresa.getInstance().cargarEmpresa("empresa.txt");
+//	            System.out.println("Datos cargados desde archivo de respaldo exitosamente.");
+//	        } catch (IOException | ClassNotFoundException ex2) {
+//	            JOptionPane.showMessageDialog(null, 
+//	                "Error crítico: No se pudieron cargar datos ni desde BD ni desde archivo.", 
+//	                "Error Fatal", 
+//	                JOptionPane.ERROR_MESSAGE);
+//	        }
 	    }
 	}
 	
