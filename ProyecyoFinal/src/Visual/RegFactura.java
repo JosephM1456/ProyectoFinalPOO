@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Logico.Cliente;
 import Logico.Componente;
+import Logico.ConexionBD;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Factura;
@@ -27,6 +28,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RegFactura extends JDialog {
@@ -71,7 +75,7 @@ public class RegFactura extends JDialog {
 	 */
 	public RegFactura() {
 		setTitle("Registro de Facturas");
-		setBounds(100, 100, 851, 606);
+		setBounds(100, 100, 1238, 700);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -120,7 +124,7 @@ public class RegFactura extends JDialog {
 			
 			txtDireccion = new JTextField();
 			txtDireccion.setEnabled(false);
-			txtDireccion.setBounds(519, 16, 285, 25);
+			txtDireccion.setBounds(503, 13, 285, 25);
 			panel.add(txtDireccion);
 			txtDireccion.setColumns(10);
 			
@@ -136,7 +140,7 @@ public class RegFactura extends JDialog {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new TitledBorder(null, "Productos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_1.setBounds(159, 112, 236, 293);
+			panel_1.setBounds(159, 112, 406, 408);
 			panel.add(panel_1);
 			panel_1.setLayout(new BorderLayout(0, 0));
 			
@@ -189,7 +193,7 @@ public class RegFactura extends JDialog {
 				}
 			});
 			btnEliminar.setEnabled(false);
-			btnEliminar.setBounds(410, 257, 115, 29);
+			btnEliminar.setBounds(574, 257, 115, 29);
 			panel.add(btnEliminar);
 			
 			btnAñadir = new JButton("A\u00F1adir");
@@ -207,7 +211,7 @@ public class RegFactura extends JDialog {
 				}
 			});
 			btnAñadir.setEnabled(false);
-			btnAñadir.setBounds(410, 212, 115, 29);
+			btnAñadir.setBounds(574, 209, 115, 29);
 			panel.add(btnAñadir);
 			
 			txtIdProducto = new JTextField();
@@ -218,7 +222,7 @@ public class RegFactura extends JDialog {
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBorder(new TitledBorder(null, "Carrito", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_2.setBounds(540, 112, 236, 293);
+			panel_2.setBounds(704, 112, 458, 383);
 			panel.add(panel_2);
 			panel_2.setLayout(new BorderLayout(0, 0));
 			
@@ -242,24 +246,24 @@ public class RegFactura extends JDialog {
 			
 			
 			JLabel lblPrecioTotal = new JLabel("Precio Total:");
-			lblPrecioTotal.setBounds(550, 421, 91, 20);
+			lblPrecioTotal.setBounds(936, 512, 91, 20);
 			panel.add(lblPrecioTotal);
 			
 			JLabel lblDescuento = new JLabel("Descuento:");
-			lblDescuento.setBounds(560, 462, 79, 20);
+			lblDescuento.setBounds(936, 556, 79, 20);
 			panel.add(lblDescuento);
 			
 			txtPrecioTotal = new JTextField();
 			txtPrecioTotal.setText("0.0$");
 			txtPrecioTotal.setEnabled(false);
-			txtPrecioTotal.setBounds(656, 418, 120, 26);
+			txtPrecioTotal.setBounds(1042, 512, 120, 26);
 			panel.add(txtPrecioTotal);
 			txtPrecioTotal.setColumns(10);
 			
 			txtDescuento = new JTextField();
 			txtDescuento.setText("0.0$");
 			txtDescuento.setEnabled(false);
-			txtDescuento.setBounds(654, 459, 122, 26);
+			txtDescuento.setBounds(1042, 553, 122, 26);
 			panel.add(txtDescuento);
 			txtDescuento.setColumns(10);
 			
@@ -268,12 +272,12 @@ public class RegFactura extends JDialog {
 			panel.add(lblNewLabel);
 			
 			JLabel lblNewLabel_1 = new JLabel("Telefono:");
-			lblNewLabel_1.setBounds(413, 52, 69, 20);
+			lblNewLabel_1.setBounds(803, 16, 69, 20);
 			panel.add(lblNewLabel_1);
 			
 			txtTelefono = new JTextField();
 			txtTelefono.setEnabled(false);
-			txtTelefono.setBounds(519, 52, 146, 26);
+			txtTelefono.setBounds(887, 13, 146, 26);
 			panel.add(txtTelefono);
 			txtTelefono.setColumns(10);
 			
@@ -283,7 +287,7 @@ public class RegFactura extends JDialog {
 					clean();
 				}
 			});
-			btnLimpiar.setBounds(680, 48, 124, 29);
+			btnLimpiar.setBounds(413, 54, 124, 29);
 			panel.add(btnLimpiar);
 		}
 		{
@@ -293,25 +297,41 @@ public class RegFactura extends JDialog {
 			{
 				btnFacturar = new JButton("Facturar");
 				btnFacturar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
+				    public void actionPerformed(ActionEvent e) {
+				        String idFactura = "F-" + (Empresa.getInstance().countIdFactura());
 				        float costoTotal = 0;
 				        Cliente cliente = cargarCliente(txtCedula.getText());
 				     
 				        if (cliente != null) {
-				        	if(calcularDescuento(cliente) == 0) {
-				        		costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
-				        	}else {
-				        		costoTotal = calcularDescuento(cliente);
-				        	}
-				            Factura factura = new Factura(idFactura, costoTotal, new ArrayList<>(componentesCarrito), cliente);
+				            if(calcularDescuento(cliente) == 0) {
+				                costoTotal = Float.parseFloat(txtPrecioTotal.getText().replace("$", ""));
+				            } else {
+				                costoTotal = calcularDescuento(cliente);
+				            }
+				            
+				            // CREAR LA FACTURA CON EL CONSTRUCTOR BÁSICO
+				            Factura factura = new Factura(idFactura, cliente);
+				            
+				            // AGREGAR COMPONENTES UNO POR UNO (esto calcula el precio sin descuento)
+				            for (Componente componente : componentesCarrito) {
+				                factura.agregarComponente(componente);
+				            }
+				            
+				            // DESPUÉS DE AGREGAR TODOS LOS COMPONENTES, ESTABLECER EL COSTO FINAL CON DESCUENTO
+				            factura.setCostoTotal(costoTotal);
+				            
+				            // Agregar a la memoria
 				            Empresa.getInstance().getLasFacturas().add(factura);
+				            
+				            // Insertar en la base de datos
+				            insertarFacturaEnBD(factura);
+				            
 				            JOptionPane.showMessageDialog(null, "Factura generada con éxito!", "Información", JOptionPane.INFORMATION_MESSAGE);
 				            clean();
 				        } else {
 				            JOptionPane.showMessageDialog(null, "No se pudo generar la factura. Verifique los datos del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
 				        }
-					}
+				    }
 				});
 				btnFacturar.setEnabled(false);
 				btnFacturar.setActionCommand("OK");
@@ -505,5 +525,26 @@ public class RegFactura extends JDialog {
 	    componentesCarrito.clear();
 	    modelo1.setRowCount(0);
 	    btnFacturar.setEnabled(false);
+	}
+	
+	private void insertarFacturaEnBD(Factura factura) {
+	    String user = "sa";
+	    String password = "sa123";
+	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+	            "databaseName=TiendaComponentes;" +
+	            "user=" + user + ";" +
+	            "password=" + password + ";" +
+	            "encrypt=false;" +
+	            "trustServerCertificate=true;";
+	    
+	    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+	        ConexionBD conexionBD = new ConexionBD();
+	        conexionBD.insertarFactura(connection, factura);
+	        System.out.println("Factura insertada correctamente en la base de datos.");
+	    } catch (SQLException ex) {
+	        System.out.println("Error al insertar factura en la base de datos: " + ex.getMessage());
+	        JOptionPane.showMessageDialog(null, "Error al guardar en la base de datos: " + ex.getMessage(), 
+	                                    "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 }

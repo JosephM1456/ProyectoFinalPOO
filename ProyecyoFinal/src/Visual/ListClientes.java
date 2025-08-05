@@ -23,6 +23,7 @@ import javax.swing.border.TitledBorder;
 
 import Logico.Cliente;
 import Logico.Componente;
+import Logico.ConexionBD;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Visitante;
@@ -34,6 +35,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -181,38 +185,46 @@ public class ListClientes extends JDialog {
 			
 			btnEliminar = new JButton("Eliminar");
 			btnEliminar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Cliente cliente = Empresa.getInstance().buscarClienteById(idSelect);
-					boolean hacer = true;
-					int ind = 0;
-					int result;
-					while(ind < Empresa.getInstance().getLasFacturas().size())
-					{
-						if(Empresa.getInstance().getLasFacturas().get(ind).getCliente().getIdCliente().equals(cliente.getIdCliente()))
-						{
-							hacer = false;
-							break;
-						}
-						ind++;
-					}
-					
-					if(hacer)
-					{
-						result = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar este cliente?", "Confimación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-						if(result == 0)
-						{
-							Empresa.getInstance().getLosClientes().remove(cliente);
-							panelLista.remove(clienteSelect);
-							panelLista.revalidate();
-							panelLista.repaint();
-							clienteSelect = null;
-							btnActualizar.setEnabled(false);
-							btnEliminar.setEnabled(false);
-						}
-					}
-					else JOptionPane.showMessageDialog(null, "Este cliente ya no puede ser eliminado", null, JOptionPane.ERROR_MESSAGE);
-					
-				}
+			    public void actionPerformed(ActionEvent e) {
+			        Cliente cliente = Empresa.getInstance().buscarClienteById(idSelect);
+			        boolean hacer = true;
+			        int ind = 0;
+			        int result;
+			        
+			        // Verificar si el cliente tiene facturas asociadas
+			        while(ind < Empresa.getInstance().getLasFacturas().size()) {
+			            if(Empresa.getInstance().getLasFacturas().get(ind).getCliente().getIdCliente().equals(cliente.getIdCliente())) {
+			                hacer = false;
+			                break;
+			            }
+			            ind++;
+			        }
+			        
+			        if(hacer) {
+			            result = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar este cliente?", 
+			                                                 "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			            if(result == 0) {
+			                // Eliminar específicamente este cliente de la BD
+			                eliminarClienteEnBD(cliente.getIdCliente());
+			                
+			                // Eliminar cliente de la lista en memoria
+			                Empresa.getInstance().getLosClientes().remove(cliente);
+			                
+			                // Actualizar la interfaz gráfica
+			                panelLista.remove(clienteSelect);
+			                panelLista.revalidate();
+			                panelLista.repaint();
+			                clienteSelect = null;
+			                btnActualizar.setEnabled(false);
+			                btnEliminar.setEnabled(false);
+			                
+			                JOptionPane.showMessageDialog(null, "Cliente eliminado con éxito de la base de datos.");
+			            }
+			        } else {
+			            JOptionPane.showMessageDialog(null, "Este cliente no puede ser eliminado porque tiene facturas asociadas", 
+			                                        "Error", JOptionPane.ERROR_MESSAGE);
+			        }
+			    }
 			});
 			btnEliminar.setEnabled(false);
 			buttonPane.add(btnEliminar);
@@ -596,5 +608,26 @@ public class ListClientes extends JDialog {
 			}
 		}
 		return 0;
+	}
+	
+	private void eliminarClienteEnBD(String idCliente) {
+	    String user = "sa";
+	    String password = "sa123";
+	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+	            "databaseName=TiendaComponentes;" +
+	            "user=" + user + ";" +
+	            "password=" + password + ";" +
+	            "encrypt=false;" +
+	            "trustServerCertificate=true;";
+	    
+	    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+	        ConexionBD conexionBD = new ConexionBD();
+	        conexionBD.eliminarCliente(connection, idCliente);
+	        System.out.println("Cliente eliminado correctamente de la base de datos.");
+	    } catch (SQLException ex) {
+	        System.out.println("Error al eliminar cliente de la base de datos: " + ex.getMessage());
+	        JOptionPane.showMessageDialog(null, "Error al eliminar de la base de datos: " + ex.getMessage(), 
+	                                    "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 }

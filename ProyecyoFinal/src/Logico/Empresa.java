@@ -25,6 +25,7 @@ public class Empresa implements Serializable {
 		this.LasFacturas = new ArrayList<>();
 		this.LosClientes = new ArrayList<>();
 		this.LosComponentes = new ArrayList<>();
+		
 	}
 	public ArrayList<Componente> getLosComponentes() {
 		return LosComponentes;
@@ -224,4 +225,5 @@ public class Empresa implements Serializable {
 	    }
 	    return countIdMax + 1;
 	}
+	
 }

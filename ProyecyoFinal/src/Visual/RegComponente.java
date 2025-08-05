@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -25,6 +28,7 @@ import javax.swing.JLayeredPane;
 
 import Logico.ArchivoEmpresa;
 import Logico.Componente;
+import Logico.ConexionBD;
 import Logico.Empresa;
 import Logico.DiscoDuro;
 import Logico.MicroProcesador;
@@ -318,68 +322,96 @@ public class RegComponente extends JDialog {
         okButton = new JButton("Registrar");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-            	if(aux == null)
-            	{
-	                if (numSerieTextField.getText().isEmpty() || precioTextField.getText().isEmpty() || cantDispTextField.getText().isEmpty()
-	                        || marcaTextField.getText().isEmpty() || modeloTextField.getText().isEmpty()) {
-	                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
-	                } else {
-	                    try {
-	                        String id = idTextField.getText();
-	                        String numSerie = numSerieTextField.getText();
-	                        float precio = Float.parseFloat(precioTextField.getText());
-	                        int cantDisp = Integer.parseInt(cantDispTextField.getText());
-	                        String marca = marcaTextField.getText();
-	                        String modelo = modeloTextField.getText();
-	
-	                        if (btnDiscoDuro.isSelected()) {
-	                            String tipoConex = tipoConexTextField.getText();
-	                            float capAlm = Float.parseFloat(capAlmTextField.getText());
-	                            DiscoDuro discoDuro = new DiscoDuro(id, numSerie, precio, cantDisp, marca, modelo, tipoConex, capAlm);
-	                            Empresa.getInstance().insertarComponente(discoDuro);
-	                        } else if (btnMicroProcesador.isSelected()) {
-	                            String tipoConex = tipoConexTextField.getText();
-	                            float velProc = Float.parseFloat(velProcTextField.getText());
-	                            MicroProcesador microProcesador = new MicroProcesador(id, numSerie, precio, cantDisp, marca, modelo, tipoConex, velProc);
-	                            Empresa.getInstance().insertarComponente(microProcesador);
-	                        } else if (btnRAM.isSelected()) {
-	                            float cantGB = Float.parseFloat(cantGBTextField.getText());
-	                            String tipoMem = tipoMemTextField.getText();
-	                            RAM ram = new RAM(id, numSerie, precio, cantDisp, marca, modelo, cantGB, tipoMem);
-	                            Empresa.getInstance().insertarComponente(ram);
-	                        } else if (btnTarjetaMadre.isSelected()) {
-	                            String conector = conectorTextField.getText();
-	                            String tipoRam = tipoRamTextField.getText();
-	                            ArrayList<String> conexiones = new ArrayList<>(); 
-	                            TarjetaMadre tarjetaMadre = new TarjetaMadre(id, numSerie, precio, cantDisp, marca, modelo, conector, tipoRam, conexiones);
-	                            Empresa.getInstance().insertarComponente(tarjetaMadre);
-	                        }
-	                        //guardarEmpresa();
-	                        limpiarCampos();
-	                        JOptionPane.showMessageDialog(null, "Componente registrado con éxito.");
-	                    } catch (NumberFormatException e) {
-	                        JOptionPane.showMessageDialog(null, "Por favor ingrese valores numéricos válidos en los campos de precio, cantidad, capacidad de almacenamiento, velocidad de procesamiento y cantidad de GB.");
-	                    }
-	                }            		
-            	}
-            	else if(aux != null)
-            	{
-            		if(precioTextField.getText().isEmpty() || precioTextField.getText().equals("") || cantDispTextField.getText().isEmpty() || cantDispTextField.getText().equals(""))
-            		{
-            			JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
-            		}
-            		else
-            		{
-            			try {
-            				aux.setCantidadDisponible(Integer.parseInt(cantDispTextField.getText()));
-            				aux.setPrecio(Float.parseFloat(precioTextField.getText()));
-            				JOptionPane.showMessageDialog(null, "Componente actualizado con éxito.");
-            				dispose();
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "Por favor ingrese valores numéricos válidos en los campos de precio, cantidad, capacidad de almacenamiento, velocidad de procesamiento y cantidad de GB.");
-						}
-            		}
-            	}
+                if(aux == null) {
+                    // Caso: Registrar nuevo componente
+                    if (numSerieTextField.getText().isEmpty() || precioTextField.getText().isEmpty() || cantDispTextField.getText().isEmpty()
+                            || marcaTextField.getText().isEmpty() || modeloTextField.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+                    } else {
+                        try {
+                            String id = idTextField.getText();
+                            String numSerie = numSerieTextField.getText();
+                            float precio = Float.parseFloat(precioTextField.getText());
+                            int cantDisp = Integer.parseInt(cantDispTextField.getText());
+                            String marca = marcaTextField.getText();
+                            String modelo = modeloTextField.getText();
+                            
+                            Componente nuevoComponente = null;
+
+                            if (btnDiscoDuro.isSelected()) {
+                                if (tipoConexTextField.getText().isEmpty() || capAlmTextField.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos específicos del Disco Duro.");
+                                    return;
+                                }
+                                String tipoConex = tipoConexTextField.getText();
+                                float capAlm = Float.parseFloat(capAlmTextField.getText());
+                                nuevoComponente = new DiscoDuro(id, numSerie, precio, cantDisp, marca, modelo, tipoConex, capAlm);
+                                
+                            } else if (btnMicroProcesador.isSelected()) {
+                                if (tipoConexTextField.getText().isEmpty() || velProcTextField.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos específicos del Microprocesador.");
+                                    return;
+                                }
+                                String tipoConex = tipoConexTextField.getText();
+                                float velProc = Float.parseFloat(velProcTextField.getText());
+                                nuevoComponente = new MicroProcesador(id, numSerie, precio, cantDisp, marca, modelo, tipoConex, velProc);
+                                
+                            } else if (btnRAM.isSelected()) {
+                                if (cantGBTextField.getText().isEmpty() || tipoMemTextField.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos específicos de la RAM.");
+                                    return;
+                                }
+                                float cantGB = Float.parseFloat(cantGBTextField.getText());
+                                String tipoMem = tipoMemTextField.getText();
+                                nuevoComponente = new RAM(id, numSerie, precio, cantDisp, marca, modelo, cantGB, tipoMem);
+                                
+                            } else if (btnTarjetaMadre.isSelected()) {
+                                if (conectorTextField.getText().isEmpty() || tipoRamTextField.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos específicos de la Tarjeta Madre.");
+                                    return;
+                                }
+                                String conector = conectorTextField.getText();
+                                String tipoRam = tipoRamTextField.getText();
+                                ArrayList<String> conexiones = new ArrayList<>(); 
+                                nuevoComponente = new TarjetaMadre(id, numSerie, precio, cantDisp, marca, modelo, conector, tipoRam, conexiones);
+                            }
+                            
+                            if (nuevoComponente != null) {
+                                // Insertar en la lista de memoria
+                                Empresa.getInstance().insertarComponente(nuevoComponente);
+                                
+                                // Insertar específicamente este componente en la BD
+                                insertarComponenteEnBD(nuevoComponente);
+                                
+                                limpiarCampos();
+                                JOptionPane.showMessageDialog(null, "Componente registrado con éxito y guardado en la base de datos.");
+                            }
+                            
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Por favor ingrese valores numéricos válidos en los campos de precio, cantidad, capacidad de almacenamiento, velocidad de procesamiento y cantidad de GB.");
+                        }
+                    }
+                } else if(aux != null) {
+                    // Caso: Actualizar componente existente
+                    if(precioTextField.getText().isEmpty() || precioTextField.getText().equals("") || 
+                       cantDispTextField.getText().isEmpty() || cantDispTextField.getText().equals("")) {
+                        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+                    } else {
+                        try {
+                            aux.setCantidadDisponible(Integer.parseInt(cantDispTextField.getText()));
+                            aux.setPrecio(Float.parseFloat(precioTextField.getText()));
+                            
+                            // Actualizar específicamente este componente en la BD
+                            actualizarComponenteEnBD(aux);
+                            
+                            JOptionPane.showMessageDialog(null, "Componente actualizado con éxito y guardado en la base de datos.");
+                            dispose();
+                            
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Por favor ingrese valores numéricos válidos en los campos de precio, cantidad, capacidad de almacenamiento, velocidad de procesamiento y cantidad de GB.");
+                        }
+                    }
+                }
             }
         });
         okButton.setActionCommand("OK");
@@ -491,5 +523,46 @@ public class RegComponente extends JDialog {
     	}
     	
     }
-    
+    private void insertarComponenteEnBD(Componente componente) {
+        String user = "sa";
+        String password = "sa123";
+        String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+                "databaseName=TiendaComponentes;" +
+                "user=" + user + ";" +
+                "password=" + password + ";" +
+                "encrypt=false;" +
+                "trustServerCertificate=true;";
+        
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            ConexionBD conexionBD = new ConexionBD();
+            conexionBD.insertarComponente(connection, componente);
+            System.out.println("Componente insertado correctamente en la base de datos.");
+        } catch (SQLException ex) {
+            System.out.println("Error al insertar componente en la base de datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al guardar en la base de datos: " + ex.getMessage(), 
+                                        "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método auxiliar para actualizar componente en BD
+    private void actualizarComponenteEnBD(Componente componente) {
+        String user = "sa";
+        String password = "sa123";
+        String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+                "databaseName=TiendaComponentes;" +
+                "user=" + user + ";" +
+                "password=" + password + ";" +
+                "encrypt=false;" +
+                "trustServerCertificate=true;";
+        
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            ConexionBD conexionBD = new ConexionBD();
+            conexionBD.actualizarComponente(connection, componente);
+            System.out.println("Componente actualizado correctamente en la base de datos.");
+        } catch (SQLException ex) {
+            System.out.println("Error al actualizar componente en la base de datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al actualizar en la base de datos: " + ex.getMessage(), 
+                                        "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

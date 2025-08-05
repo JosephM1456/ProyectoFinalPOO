@@ -12,6 +12,9 @@ public class Factura implements Serializable {
 	public String getIdFactura() {
 		return IdFactura;
 	}
+	public Factura(String idFactura, Cliente cliente) {
+		this(idFactura, 0.0f, new ArrayList<Componente>(), cliente);
+	}
 	public void setIdFactura(String idFactura) {
 		IdFactura = idFactura;
 	}
@@ -39,5 +42,13 @@ public class Factura implements Serializable {
 		CostoTotal = costoTotal;
 		LosComponentes = losComponentes;
 		this.cliente = cliente;
+	}
+	public void agregarComponente(Componente componente) {
+		if (LosComponentes == null) {
+			LosComponentes = new ArrayList<Componente>();
+		}
+		LosComponentes.add(componente);
+		// Actualizar el costo total sumando el precio del componente
+		CostoTotal += componente.getPrecio();
 	}
 }

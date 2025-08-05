@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import javax.swing.border.TitledBorder;
 
 import Logico.Componente;
+import Logico.ConexionBD;
 import Logico.DiscoDuro;
 import Logico.Empresa;
 import Logico.Factura;
@@ -44,6 +45,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
@@ -247,37 +251,40 @@ public class ListComponentes extends JDialog {
 				{
 					btnEliminar = new JButton("Eliminar");
 					btnEliminar.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							Componente compSelect = Empresa.getInstance().buscarCompoById(idSelect);
-							boolean valido = true;
-							for(Factura ind : Empresa.getInstance().getLasFacturas())
-							{
-								if(ind.getLosComponentes().contains(compSelect))
-								{
-									valido = false;
-								}
-							}
-							if(valido)
-							{
-								int result;
-								result = JOptionPane.showConfirmDialog(scrollPane, "Está seguro que desea eliminar este componente?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-								if(result == 0)
-								{
-									cantComponentes -= 1;
-									Empresa.getInstance().deleteComponente(idSelect);
-									listaComp.remove(compSelect);
-									panelLista.remove(componentSelect);
-									panelLista.revalidate();
-									panelLista.repaint();
-									JOptionPane.showMessageDialog(scrollPane, "Operación exitosa", "Componente Eliminado", JOptionPane.INFORMATION_MESSAGE);
-								}	
-							} else JOptionPane.showMessageDialog(scrollPane, "Este componente ya no puede ser eliminado", "Error", JOptionPane.INFORMATION_MESSAGE);
-						
-							if(cantComponentes % 5 == 0)
-							{
-								loadComp(tipoSelect);
-							}
-						}
+					    public void actionPerformed(ActionEvent e) {
+					        Componente compSelect = Empresa.getInstance().buscarCompoById(idSelect);
+					        boolean valido = true;
+					        for(Factura ind : Empresa.getInstance().getLasFacturas()) {
+					            if(ind.getLosComponentes().contains(compSelect)) {
+					                valido = false;
+					            }
+					        }
+					        
+					        if(valido) {
+					            int result;
+					            result = JOptionPane.showConfirmDialog(scrollPane, "Está seguro que desea eliminar este componente?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					            if(result == 0) {
+					                // Eliminar de la base de datos
+					                eliminarComponenteEnBD(idSelect);
+					                
+					                // Eliminar de la memoria/interfaz
+					                cantComponentes -= 1;
+					                Empresa.getInstance().deleteComponente(idSelect);
+					                listaComp.remove(compSelect);
+					                panelLista.remove(componentSelect);
+					                panelLista.revalidate();
+					                panelLista.repaint();
+					                
+					                JOptionPane.showMessageDialog(scrollPane, "Operación exitosa", "Componente Eliminado", JOptionPane.INFORMATION_MESSAGE);
+					            }    
+					        } else {
+					            JOptionPane.showMessageDialog(scrollPane, "Este componente ya no puede ser eliminado", "Error", JOptionPane.INFORMATION_MESSAGE);
+					        }
+					    
+					        if(cantComponentes % 5 == 0) {
+					            loadComp(tipoSelect);
+					        }
+					    }
 					});
 					btnEliminar.setEnabled(false);
 					btnEliminar.setVisible(false);
@@ -645,6 +652,8 @@ public class ListComponentes extends JDialog {
 		return 0;
 	}
 	
+	
+	
 	public void mostrarLista()
 	{
 		panelSeleccion.setVisible(false);
@@ -684,5 +693,26 @@ public class ListComponentes extends JDialog {
 		btnRetroceder.setVisible(true);
 
 		
+	}
+	
+	private void eliminarComponenteEnBD(String idComponente) {
+	    String user = "sa";
+	    String password = "sa123";
+	    String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+	            "databaseName=TiendaComponentes;" +
+	            "user=" + user + ";" +
+	            "password=" + password + ";" +
+	            "encrypt=false;" +
+	            "trustServerCertificate=true;";
+	    
+	    try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+	        ConexionBD conexionBD = new ConexionBD();
+	        conexionBD.eliminarComponente(connection, idComponente);
+	        System.out.println("Componente eliminado correctamente de la base de datos.");
+	    } catch (SQLException ex) {
+	        System.out.println("Error al eliminar componente de la base de datos: " + ex.getMessage());
+	        JOptionPane.showMessageDialog(null, "Error al eliminar de la base de datos: " + ex.getMessage(), 
+	                                    "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 }

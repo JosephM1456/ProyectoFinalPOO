@@ -6,6 +6,10 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -19,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 
 import Logico.Cliente;
+import Logico.ConexionBD;
 import Logico.Visitante;
 import Logico.Empleado;
 import Logico.Empresa;
@@ -189,59 +194,75 @@ public class RegCliente extends JDialog {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-            	if(aux == null)
-            	{
-	                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
-	                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
-	                } else {
-	                    try {
-							if (btnVisitante.isSelected()) {
-							    Visitante visitante = new Visitante(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(),0);
-							    Empresa.getInstance().insertarCliente(visitante);
-							} else if (btnEmpleado.isSelected()) {
-							    if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || descuentoTextField.getText().isEmpty()) {
-							        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de empleado.");
-							        return;
-							    }
-							    Empleado empleado = new Empleado(idTextField.getText(), direccionTextField.getText(), telefonoTextField.getText(), cedulaTextField.getText(), txtNombre.getText(), Float.parseFloat(sueldoTotalTextField.getText()), Integer.parseInt(cantAniosTrabajandoTextField.getText()), Integer.parseInt(descuentoTextField.getText()));
-							    Empresa.getInstance().insertarCliente(empleado);
-							}
-
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", "Error de registro", JOptionPane.ERROR_MESSAGE);
-						}
-	                    limpiarCampos();
-	                    JOptionPane.showMessageDialog(null, "Cliente registrado con éxito.");
-	                }            		
-            	}
-            	else if(aux != null)
-            	{
-	                if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
-	                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
-	                }
-	                else
-	                {
-	                	try
-	                	{
-	                		aux.setCedula(cedulaTextField.getText());
-	                		aux.setTelefono(telefonoTextField.getText());
-	                		aux.setNombre(txtNombre.getText());
-	                		aux.setDireccion(direccionTextField.getText());
-	                		if(btnEmpleado.isSelected())
-	                		{
-	                			((Empleado)aux).setCantAniosTrabajando(Integer.parseInt(cantAniosTrabajandoTextField.getText()));
-	                			((Empleado)aux).setDescuento(Integer.parseInt(descuentoTextField.getText()));
-	                			((Empleado)aux).setSueldoTotal(Float.parseFloat(sueldoTotalTextField.getText()));
-	                		}
-	                		JOptionPane.showMessageDialog(null, "Cliente actualizado con éxito.");
-	                		dispose();
-	                	}
-	                	catch(NumberFormatException e)
-	                	{
-	                		JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", "Error de registro", JOptionPane.ERROR_MESSAGE);
-	                	}
-	                }
-            	}
+                if(aux == null) {
+                    // Caso: Registrar nuevo cliente
+                    if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || 
+                        cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+                    } else {
+                        try {
+                            Cliente nuevoCliente = null;
+                            
+                            if (btnVisitante.isSelected()) {
+                                nuevoCliente = new Visitante(idTextField.getText(), direccionTextField.getText(), 
+                                                           telefonoTextField.getText(), cedulaTextField.getText(), 
+                                                           txtNombre.getText(), 0);
+                                Empresa.getInstance().insertarCliente(nuevoCliente);
+                            } else if (btnEmpleado.isSelected()) {
+                                if (sueldoTotalTextField.getText().isEmpty() || cantAniosTrabajandoTextField.getText().isEmpty() || 
+                                    descuentoTextField.getText().isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "Por favor complete todos los campos de empleado.");
+                                    return;
+                                }
+                                nuevoCliente = new Empleado(idTextField.getText(), direccionTextField.getText(), 
+                                                          telefonoTextField.getText(), cedulaTextField.getText(), 
+                                                          txtNombre.getText(), Float.parseFloat(sueldoTotalTextField.getText()), 
+                                                          Integer.parseInt(cantAniosTrabajandoTextField.getText()), 
+                                                          Integer.parseInt(descuentoTextField.getText()));
+                                Empresa.getInstance().insertarCliente(nuevoCliente);
+                            }
+                            
+                            // Insertar específicamente este cliente en la BD
+                            insertarClienteEnBD(nuevoCliente);
+                            
+                            limpiarCampos();
+                            JOptionPane.showMessageDialog(null, "Cliente registrado con éxito y guardado en la base de datos.");
+                            
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", 
+                                                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }            		
+                } else if(aux != null) {
+                    // Caso: Modificar cliente existente
+                    if (direccionTextField.getText().isEmpty() || telefonoTextField.getText().isEmpty() || 
+                        cedulaTextField.getText().isEmpty() || txtNombre.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+                    } else {
+                        try {
+                            aux.setCedula(cedulaTextField.getText());
+                            aux.setTelefono(telefonoTextField.getText());
+                            aux.setNombre(txtNombre.getText());
+                            aux.setDireccion(direccionTextField.getText());
+                            
+                            if(btnEmpleado.isSelected()) {
+                                ((Empleado)aux).setCantAniosTrabajando(Integer.parseInt(cantAniosTrabajandoTextField.getText()));
+                                ((Empleado)aux).setDescuento(Integer.parseInt(descuentoTextField.getText()));
+                                ((Empleado)aux).setSueldoTotal(Float.parseFloat(sueldoTotalTextField.getText()));
+                            }
+                            
+                            // Actualizar específicamente este cliente en la BD
+                            actualizarClienteEnBD(aux);
+                            
+                            JOptionPane.showMessageDialog(null, "Cliente actualizado con éxito y guardado en la base de datos.");
+                            dispose();
+                            
+                        } catch(NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Por favor llene los campos con los tipos de datos apropiados", 
+                                                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
             }
         });
         okButton.setActionCommand("OK");
@@ -298,5 +319,47 @@ public class RegCliente extends JDialog {
     		sueldoTotalTextField.setText( ((Float)((Empleado)cliente).getSueldoTotal()).toString() );
     	}
     	else btnVisitante.setSelected(true);
+    }
+    
+    private void insertarClienteEnBD(Cliente cliente) {
+        String user = "sa";
+        String password = "sa123";
+        String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+                "databaseName=TiendaComponentes;" +
+                "user=" + user + ";" +
+                "password=" + password + ";" +
+                "encrypt=false;" +
+                "trustServerCertificate=true;";
+        
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            ConexionBD conexionBD = new ConexionBD();
+            conexionBD.insertarCliente(connection, cliente);
+            System.out.println("Cliente insertado correctamente en la base de datos.");
+        } catch (SQLException ex) {
+            System.out.println("Error al insertar cliente en la base de datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al guardar en la base de datos: " + ex.getMessage(), 
+                                        "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void actualizarClienteEnBD(Cliente cliente) {
+        String user = "sa";
+        String password = "sa123";
+        String connectionUrl = "jdbc:sqlserver://localhost\\MSSQLSERVER01;" +
+                "databaseName=TiendaComponentes;" +
+                "user=" + user + ";" +
+                "password=" + password + ";" +
+                "encrypt=false;" +
+                "trustServerCertificate=true;";
+        
+        try (Connection connection = DriverManager.getConnection(connectionUrl)) {
+            ConexionBD conexionBD = new ConexionBD();
+            conexionBD.actualizarCliente(connection, cliente);
+            System.out.println("Cliente actualizado correctamente en la base de datos.");
+        } catch (SQLException ex) {
+            System.out.println("Error al actualizar cliente en la base de datos: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al actualizar en la base de datos: " + ex.getMessage(), 
+                                        "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
